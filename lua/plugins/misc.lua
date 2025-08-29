@@ -15,7 +15,7 @@ return {
 			local opts = { noremap = true, silent = true }
 			-- vim.keymap.set("n", "<C-_>", require("Comment.api").toggle.linewise.current, opts)
 			-- vim.keymap.set("n", "<C-c>", require("Comment.api").toggle.linewise.current, opts)
-			vim.keymap.set("n", "<C-k>", require("Comment.api").toggle.linewise.current, opts)
+			vim.keymap.set("n", "<C-p>", require("Comment.api").toggle.linewise.current, opts)
 			-- vim.keymap.set(
 			-- 	"v",
 			-- 	"<C-_>",
@@ -30,7 +30,7 @@ return {
 			-- )
 			vim.keymap.set(
 				"v",
-				"<C-k>",
+				"<C-p>",
 				"<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<cr>",
 				opts
 			)
