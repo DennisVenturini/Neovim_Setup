@@ -473,7 +473,15 @@ return {
 							["f"] = "filter_on_submit",
 							["<C-x>"] = "clear_filter",
 							["<bs>"] = "navigate_up",
-							["."] = "set_root",
+							["."] = function(state)
+								local node = state.tree:get_node()
+								if node.type == "directory" then
+									local path = node:get_id()
+									require("neo-tree.sources.filesystem").navigate(state, path)
+									-- sync Neovim cwd
+									vim.cmd("cd " .. vim.fn.fnameescape(path))
+								end
+							end,
 							["[g"] = "prev_git_modified",
 							["]g"] = "next_git_modified",
 							["i"] = "show_file_details", -- see `:h neo-tree-file-actions` for options to customize the window.
