@@ -31,6 +31,8 @@ return { -- Highlight, edit, and navigate code
 			"tsx",
 			"css",
 			"html",
+			"c",
+			"cpp",
 		},
 		-- Autoinstall languages that are not installed
 		auto_install = true,

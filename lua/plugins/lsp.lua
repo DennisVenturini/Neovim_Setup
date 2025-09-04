@@ -230,6 +230,7 @@ return {
 				--
 
 				ts_ls = {},
+				clangd = {},
 				ruff = {},
 				pylsp = {
 					settings = {
