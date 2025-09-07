@@ -1,65 +1,66 @@
 return {
-	"nvimtools/none-ls.nvim",
-	dependencies = {
-		"nvimtools/none-ls-extras.nvim",
-		"jayp0521/mason-null-ls.nvim", -- ensure dependencies are installed
-	},
-	config = function()
-		local null_ls = require("null-ls")
-		local formatting = null_ls.builtins.formatting -- to setup formatters
-		local diagnostics = null_ls.builtins.diagnostics -- to setup linters
+	{
+		"stevearc/conform.nvim",
+		opts = function()
+			-- detect google-java-format
+			local has_gjf_bin = vim.fn.executable("google-java-format") == 1
+			local gjf_jar = vim.fn.expand("~/.local/share/java/google-java-format-1.23.0-all-deps.jar")
+			local has_gjf_jar = vim.loop.fs_stat(gjf_jar) ~= nil
 
-		-- Formatters & linters for mason to install
-		require("mason-null-ls").setup({
-			ensure_installed = {
-				"prettier", -- ts/js formatter
-				"eslint_d", -- ts/js linter
-				"shfmt", -- Shell formatter
-				"checkmake", -- linter for Makefiles
-				-- 'stylua', -- lua formatter; Already installed via Mason
-				-- 'ruff', -- Python linter and formatter; Already installed via Mason
-				"clang-format", -- C/C++ formatter
-				"cppcheck", -- C/C++ LSP (install via mason-lspconfig usually)
-				"yamlfmt", -- YAML formatter
-				"prettier", -- also covers JSON, TOML, Markdown
-			},
-			automatic_installation = true,
-		})
+			local gjf_fmt
+			if has_gjf_bin then
+				gjf_fmt = {
+					command = "google-java-format",
+					args = { "-" },
+					stdin = true,
+				}
+			elseif has_gjf_jar then
+				gjf_fmt = {
+					command = "java",
+					args = { "-jar", gjf_jar, "-" },
+					stdin = true,
+				}
+			else
+				-- placeholder: will show unavailable in :ConformInfo
+				gjf_fmt = {
+					command = "google-java-format",
+					args = { "-" },
+					stdin = true,
+				}
+			end
 
-		local sources = {
-			formatting.clang_format.with({
-				extra_args = {
-					"--style={BasedOnStyle: LLVM, IndentWidth: 4, UseTab: Never}",
+			return {
+				formatters_by_ft = {
+					lua = { "stylua" },
+					python = { "ruff_format", "ruff_organize_imports", "black" },
+					javascript = { "prettierd", "prettier", "biome" },
+					typescript = { "prettierd", "prettier", "biome" },
+					javascriptreact = { "prettierd", "prettier", "biome" },
+					typescriptreact = { "prettierd", "prettier", "biome" },
+					json = { "prettierd", "prettier" },
+					yaml = { "yamlfmt" },
+					go = { "gofumpt", "goimports" },
+					rust = { "rustfmt" },
+					sh = { "shfmt" },
+					c = { "clang_format" },
+					cpp = { "clang_format" },
+					java = { "google-java-format" }, -- will resolve to gjf_fmt
+					["*"] = { "lsp_format" },
 				},
-			}),
-			diagnostics.cppcheck,
-			diagnostics.checkmake,
-			formatting.yamlfmt,
-			formatting.prettier.with({ filetypes = { "html", "json", "yaml", "markdown", "toml" } }),
-			formatting.stylua,
-			formatting.shfmt.with({ args = { "-i", "4" } }),
-			formatting.terraform_fmt,
-			require("none-ls.formatting.ruff").with({ extra_args = { "--extend-select", "I" } }),
-			require("none-ls.formatting.ruff_format"),
-		}
 
-		local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-		null_ls.setup({
-			-- debug = true, -- Enable debug mode. Inspect logs with :NullLsLog.
-			sources = sources,
-			-- you can reuse a shared lspconfig on_attach callback here
-			on_attach = function(client, bufnr)
-				if client:supports_method("textDocument/formatting") then
-					vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-					vim.api.nvim_create_autocmd("BufWritePre", {
-						group = augroup,
-						buffer = bufnr,
-						callback = function()
-							vim.lsp.buf.format({ async = false })
-						end,
-					})
-				end
-			end,
-		})
-	end,
+				format_on_save = function(bufnr)
+					if vim.b[bufnr].disable_autoformat or vim.g.disable_autoformat then
+						return
+					end
+					return { lsp_fallback = true, timeout_ms = 2000 }
+				end,
+
+				notify_on_error = true,
+
+				formatters = {
+					["google-java-format"] = gjf_fmt,
+				},
+			}
+		end,
+	},
 }

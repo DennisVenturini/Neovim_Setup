@@ -19,11 +19,11 @@ vim.o.smartindent = true -- Make indenting smarter again (default: false)
 vim.o.autoindent = true -- Copy indent from current line when starting new one (default: true)
 vim.o.breakindent = true -- Enable break indent (default: false)
 
-vim.o.scrolloff = 4 -- Minimal number of screen lines to keep above and below the cursor (default: 0)
+vim.o.scrolloff = 10 -- Minimal number of screen lines to keep above and below the cursor (default: 0)
 vim.o.sidescrolloff = 8 -- Minimal number of screen columns either side of cursor if wrap is `false` (default: 0)
 
 vim.o.cursorline = true -- Highlight the current line (default: false)
-vim.o.hlsearch = false -- Set highlight on search (default: true)
+vim.o.hlsearch = true -- Set highlight on search (default: true)
 vim.opt.termguicolors = true -- Set termguicolors to enable highlight groups (default: false)
 
 vim.o.splitbelow = true -- Force all horizontal splits to go below current window (default: false)
@@ -32,6 +32,19 @@ vim.o.splitright = true -- Force all vertical splits to go to the right of curre
 vim.o.showmode = false -- We don't need to see things like -- INSERT -- anymore (default: true)
 
 vim.o.whichwrap = "bs<>[]hl" -- Which "horizontal" keys are allowed to travel to prev/next line (default: 'b,s')
+
+vim.o.inccommand = "split" -- Preview substitutions live, as you type!
+
+-- Sets how neovim will display certain whitespace characters in the editor.
+--  See `:help 'list'`
+--  and `:help 'listchars'`
+--
+--  Notice listchars is set using `vim.opt` instead of `vim.o`.
+--  It is very similar to `vim.o` but offers an interface for conveniently interacting with tables.
+--   See `:help lua-options`
+--   and `:help lua-options-guide`
+vim.o.list = true
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 vim.o.numberwidth = 4 -- Set number column width to 2 {default 4}
 
@@ -51,7 +64,7 @@ vim.o.fileencoding = "utf-8" -- The encoding written to a file (default: 'utf-8'
 
 vim.o.cmdheight = 1 -- More space in the Neovim command line for displaying messages (default: 1)
 
-vim.o.updatetime = 250 -- Decrease update time (default: 4000)
+vim.o.updatetime = 50 -- Decrease update time (default: 4000)
 vim.o.timeoutlen = 300 -- Time to wait for a mapped sequence to complete (in milliseconds) (default: 1000)
 
 vim.o.backup = false -- Creates a backup file (default: false)

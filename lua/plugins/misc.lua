@@ -39,6 +39,18 @@ return {
 
 	-- Standalone plugins with less than 10 lines of config go here
 	{
+		{ -- Adds git related signs to the gutter, as well as utilities for managing changes
+			"lewis6991/gitsigns.nvim",
+			opts = {
+				signs = {
+					add = { text = "+" },
+					change = { text = "~" },
+					delete = { text = "_" },
+					topdelete = { text = "‾" },
+					changedelete = { text = "~" },
+				},
+			},
+		},
 		{
 			-- Tmux & split window navigation
 			--"christoomey/vim-tmux-navigator",
@@ -58,6 +70,21 @@ return {
 		{
 			-- Hints keybinds
 			"folke/which-key.nvim",
+			event = "VimEnter",
+			opts = {
+				delay = 0,
+				icons = {
+					mappings = vim.g.have_nerd_font,
+					keys = vim.g.have_nerd_font or {},
+				},
+
+				-- Document existing key chains
+				spec = {
+					{ "<leader>s", group = "[S]earch" },
+					{ "<leader>t", group = "[T]oggle" },
+					{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+				},
+			},
 		},
 		{
 			-- Autoclose parentheses, brackets, quotes, etc.

@@ -23,7 +23,7 @@ return {
 				},
 				add_blank_line_at_top = false, -- Add a blank line at the top of the tree.
 				auto_clean_after_session_restore = false, -- Automatically clean up broken neo-tree buffers saved in sessions
-				close_if_last_window = true,  -- Close Neo-tree if it is the last window left in the tab
+				close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
 				default_source = "filesystem", -- you can choose a specific source `last` here which indicates the last used source
 				enable_diagnostics = true,
 				enable_git_status = true,
@@ -39,12 +39,12 @@ return {
 					max_lines = 10000, -- How many lines of git status results to process. Anything after this will be dropped.
 					-- Anything before this will be used. The last items to be processed are the untracked files.
 				},
-				hide_root_node = false,                                        -- Hide the root node.
-				retain_hidden_root_indent = false,                             -- IF the root node is hidden, keep the indentation anyhow.
+				hide_root_node = false, -- Hide the root node.
+				retain_hidden_root_indent = false, -- IF the root node is hidden, keep the indentation anyhow.
 				-- This is needed if you use expanders because they render in the indent.
-				log_level = "info",                                            -- "trace", "debug", "info", "warn", "error", "fatal"
-				log_to_file = false,                                           -- true, false, "/path/to/file.log", use ':lua require("neo-tree").show_logs()' to show the file
-				open_files_in_last_window = true,                              -- false = open files in top left window
+				log_level = "info", -- "trace", "debug", "info", "warn", "error", "fatal"
+				log_to_file = false, -- true, false, "/path/to/file.log", use ':lua require("neo-tree").show_logs()' to show the file
+				open_files_in_last_window = true, -- false = open files in top left window
 				open_files_do_not_replace_types = { "terminal", "Trouble", "qf", "edgy" }, -- when opening files, do not use windows containing these filetypes or buftypes
 				open_files_using_relative_paths = false,
 				-- popup_border_style is for input and confirmation dialogs.
@@ -60,8 +60,8 @@ return {
 				use_default_mappings = true,
 				-- source_selector provides clickable tabs to switch between sources.
 				source_selector = {
-					winbar = false,         -- toggle to show selector on winbar
-					statusline = false,     -- toggle to show selector on statusline
+					winbar = false, -- toggle to show selector on winbar
+					statusline = false, -- toggle to show selector on statusline
 					show_scrolled_off_parent_node = false, -- this will replace the tabs with the parent path
 					-- of the top visible node when scrolled down.
 					sources = {
@@ -298,7 +298,7 @@ return {
 						{
 							"container",
 							content = {
-								{ "name",      zindex = 10 },
+								{ "name", zindex = 10 },
 								{
 									"symlink_target",
 									zindex = 10,
@@ -312,11 +312,11 @@ return {
 									align = "right",
 									hide_when_expanded = true,
 								},
-								{ "git_status",    zindex = 10, align = "right", hide_when_expanded = true },
-								{ "file_size",     zindex = 10, align = "right" },
-								{ "type",          zindex = 10, align = "right" },
+								{ "git_status", zindex = 10, align = "right", hide_when_expanded = true },
+								{ "file_size", zindex = 10, align = "right" },
+								{ "type", zindex = 10, align = "right" },
 								{ "last_modified", zindex = 10, align = "right" },
-								{ "created",       zindex = 10, align = "right" },
+								{ "created", zindex = 10, align = "right" },
 							},
 						},
 					},
@@ -335,21 +335,21 @@ return {
 									zindex = 10,
 									highlight = "NeoTreeSymbolicLinkTarget",
 								},
-								{ "clipboard",     zindex = 10 },
-								{ "bufnr",         zindex = 10 },
-								{ "modified",      zindex = 20, align = "right" },
-								{ "diagnostics",   zindex = 20, align = "right" },
-								{ "git_status",    zindex = 10, align = "right" },
-								{ "file_size",     zindex = 10, align = "right" },
-								{ "type",          zindex = 10, align = "right" },
+								{ "clipboard", zindex = 10 },
+								{ "bufnr", zindex = 10 },
+								{ "modified", zindex = 20, align = "right" },
+								{ "diagnostics", zindex = 20, align = "right" },
+								{ "git_status", zindex = 10, align = "right" },
+								{ "file_size", zindex = 10, align = "right" },
+								{ "type", zindex = 10, align = "right" },
 								{ "last_modified", zindex = 10, align = "right" },
-								{ "created",       zindex = 10, align = "right" },
+								{ "created", zindex = 10, align = "right" },
 							},
 						},
 					},
 					message = {
 						{ "indent", with_markers = false },
-						{ "name",   highlight = "NeoTreeMessage" },
+						{ "name", highlight = "NeoTreeMessage" },
 					},
 					terminal = {
 						{ "indent" },
@@ -372,15 +372,15 @@ return {
 				-- }                         |  }                        |      end
 				--
 				-- see `:h neo-tree-custom-commands-global`
-				commands = {},  -- A list of functions
+				commands = {}, -- A list of functions
 
-				window = {      -- see https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/popup for
+				window = { -- see https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/popup for
 					-- possible options. These can also be functions that return these options.
 					position = "left", -- left, right, top, bottom, float, current
 					width = 40, -- applies to left and right positions
 					height = 15, -- applies to top and bottom positions
 					auto_expand_width = false, -- expand the window when file exceeds the window width. does not work with position = "float"
-					popup = {   -- settings that apply to float position only
+					popup = { -- settings that apply to float position only
 						size = {
 							height = "80%",
 							width = "50%",
@@ -538,7 +538,7 @@ return {
 					--         The first field in each component is the name of the function to call.
 					--         The rest of the fields are passed to the function as the "config" argument.
 					filtered_items = {
-						visible = false,     -- when true, they will just be displayed differently than normal items
+						visible = false, -- when true, they will just be displayed differently than normal items
 						force_visible_in_empty_folder = false, -- when true, hidden files will be shown if the root folder is otherwise empty
 						children_inherit_highlights = true, -- whether children of filtered parents should inherit their parent's highlight group
 						show_hidden_count = true, -- when true, the number of hidden items in each folder will be shown as the last entry
@@ -602,9 +602,9 @@ return {
 					--  return args
 					--end,
 					group_empty_dirs = false, -- when true, empty folders will be grouped together
-					search_limit = 50,       -- max number of search results when using filters
+					search_limit = 50, -- max number of search results when using filters
 					follow_current_file = {
-						enabled = true,      -- This will find and focus the file in the active buffer every time
+						enabled = true, -- This will find and focus the file in the active buffer every time
 						--               -- the current file is changed while the tree is open.
 						leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
 					},
@@ -674,16 +674,16 @@ return {
 					renderers = {
 						root = {
 							{ "indent" },
-							{ "icon",  default = "C" },
-							{ "name",  zindex = 10 },
+							{ "icon", default = "C" },
+							{ "name", zindex = 10 },
 						},
 						symbol = {
-							{ "indent",    with_expanders = true },
+							{ "indent", with_expanders = true },
 							{ "kind_icon", default = "?" },
 							{
 								"container",
 								content = {
-									{ "name",      zindex = 10 },
+									{ "name", zindex = 10 },
 									{ "kind_name", zindex = 20, align = "right" },
 								},
 							},
@@ -754,7 +754,7 @@ return {
 					renderers = {
 						custom = {
 							{ "indent" },
-							{ "icon",  default = "C" },
+							{ "icon", default = "C" },
 							{ "custom" },
 							{ "name" },
 						},
