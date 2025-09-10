@@ -1,66 +1,53 @@
 return {
 	{
 		"stevearc/conform.nvim",
-		opts = function()
-			-- detect google-java-format
-			local has_gjf_bin = vim.fn.executable("google-java-format") == 1
-			local gjf_jar = vim.fn.expand("~/.local/share/java/google-java-format-1.23.0-all-deps.jar")
-			local has_gjf_jar = vim.loop.fs_stat(gjf_jar) ~= nil
-
-			local gjf_fmt
-			if has_gjf_bin then
-				gjf_fmt = {
-					command = "google-java-format",
-					args = { "-" },
-					stdin = true,
-				}
-			elseif has_gjf_jar then
-				gjf_fmt = {
-					command = "java",
-					args = { "-jar", gjf_jar, "-" },
-					stdin = true,
-				}
-			else
-				-- placeholder: will show unavailable in :ConformInfo
-				gjf_fmt = {
-					command = "google-java-format",
-					args = { "-" },
-					stdin = true,
-				}
-			end
-
-			return {
-				formatters_by_ft = {
-					lua = { "stylua" },
-					python = { "ruff_format", "ruff_organize_imports", "black" },
-					javascript = { "prettierd", "prettier", "biome" },
-					typescript = { "prettierd", "prettier", "biome" },
-					javascriptreact = { "prettierd", "prettier", "biome" },
-					typescriptreact = { "prettierd", "prettier", "biome" },
-					json = { "prettierd", "prettier" },
-					yaml = { "yamlfmt" },
-					go = { "gofumpt", "goimports" },
-					rust = { "rustfmt" },
-					sh = { "shfmt" },
-					c = { "clang_format" },
-					cpp = { "clang_format" },
-					java = { "google-java-format" }, -- will resolve to gjf_fmt
-					["*"] = { "lsp_format" },
+		event = { "BufWritePre" },
+		cmd = { "ConformInfo" },
+		-- This will provide type hinting with LuaLS
+		---@module "conform"
+		---@type conform.setupOpts
+		opts = {
+			-- Define your formatters
+			formatters_by_ft = {
+				lua = { "stylua" },
+				python = { "ruff_format", "ruff_organize_imports", "black" },
+				javascript = { "prettierd", "prettier", "biome" },
+				typescript = { "prettierd", "prettier", "biome" },
+				javascriptreact = { "prettierd", "prettier", "biome" },
+				typescriptreact = { "prettierd", "prettier", "biome" },
+				json = { "prettierd", "prettier" },
+				yaml = { "yamlfmt" },
+				go = { "gofumpt", "goimports" },
+				rust = { "rustfmt" },
+				sh = { "shfmt" },
+				c = { "clang_format" },
+				cpp = { "clang_format" },
+				java = { "astyle" },
+				xml = { "xmlformatter" },
+				-- ["*"] = { "lsp_format" },
+			},
+			-- Set up format-on-save
+			format_on_save = { timeout_ms = 500, lsp_fallback = false },
+			-- Customize formatters
+			formatters = {
+				shfmt = {
+					append_args = { "-i", "2" },
 				},
-
-				format_on_save = function(bufnr)
-					if vim.b[bufnr].disable_autoformat or vim.g.disable_autoformat then
-						return
-					end
-					return { lsp_fallback = true, timeout_ms = 2000 }
-				end,
-
-				notify_on_error = true,
-
-				formatters = {
-					["google-java-format"] = gjf_fmt,
+				astyle = {
+					command = "astyle",
+					args = { "--options=" .. vim.fn.expand("~/.config/nvim/java_style/astylerc") },
+					stdin = true,
 				},
-			}
+				xmlformatter = {
+					command = vim.fn.expand("~/.local/share/nvim/mason/bin/xmlformat"),
+					args = { "--indent", "4", "-" }, -- note the trailing '-' for stdin
+					stdin = true,
+				},
+			},
+		},
+		init = function()
+			-- If you want the formatexpr, here is the place to set it
+			vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
 		end,
 	},
 }

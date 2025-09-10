@@ -15,7 +15,7 @@ map("n", "<leader>f", "<cmd>Ex<cr>", "Netrw: Explore")
 map("n", "<C-s>", "<cmd>w<cr>", "Save")
 map("n", "<leader>wa", "<cmd>wa!<cr>", "Save all!")
 
-map("n", "<leader>qn", "<cmd>qa<cr>", "Quit")
+map("n", "<leader>qn", "<cmd>qa!<cr>", "Quit")
 map("n", "<C-q>", "<cmd>q<cr>", "Quit all!")
 ----------------------------------------------------------------------------------------------------------------------------------
 

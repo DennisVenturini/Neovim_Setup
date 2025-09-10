@@ -16,6 +16,7 @@ return {
 						"jsonls",
 						"yamlls",
 						"lua_ls",
+						"lemminx",
 					},
 					automatic_enable = {
 						-- auto-enable everything installed by Mason EXCEPT jdtls (we’ll handle Java separately)
@@ -59,7 +60,7 @@ return {
 					-- Nice diagnostics helpers
 					map("[d", vim.diagnostic.goto_prev, "Prev Diagnostic")
 					map("]d", vim.diagnostic.goto_next, "Next Diagnostic")
-					map("<leader>e", function()
+					map("<leader>df", function()
 						vim.diagnostic.open_float(nil, { border = "rounded" })
 					end, "Line Diagnostics")
 
@@ -221,17 +222,19 @@ return {
 			------------------------------------------------------------------------
 			local ensure = {
 				-- LSPs (Mason package names may differ from lspconfig names; this is fine)
-				"clangd",
-				"pylsp",
-				"lua-language-server",
-				"json-lsp",
-				"yaml-language-server",
-				"html-lsp",
-				"css-lsp",
+				-- "clangd",
+				-- "pylsp",
+				-- "html-lsp",
+				-- "css-lsp",
+				-- "json-lsp",
+				-- "yaml-language-server",
+				-- "lua-language-server",
 				-- formatters you use with conform
 				"stylua",
 				"clang-format",
 				"ruff",
+				"prettier",
+				"xmlformatter",
 				-- add more as you like (e.g. "prettierd", "shfmt", "black", "ruff")
 			}
 			require("mason-tool-installer").setup({ ensure_installed = ensure })

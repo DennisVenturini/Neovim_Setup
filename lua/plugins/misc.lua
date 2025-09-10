@@ -57,7 +57,7 @@ return {
 		},
 		{
 			-- Detect tabstop and shiftwidth automatically
-			"tpope/vim-sleuth",
+			-- "tpope/vim-sleuth",
 		},
 		{
 			-- Powerful Git integration for Vim
@@ -99,6 +99,37 @@ return {
 			event = "VimEnter",
 			dependencies = { "nvim-lua/plenary.nvim" },
 			opts = { signs = false },
+		},
+		{
+			"kylechui/nvim-surround",
+			version = "*",
+			-- Lazy-load on first use and give which-key labels
+			keys = {
+				{ "gsa", mode = "n", desc = "Surround add (operator)" },
+				{ "gss", mode = "n", desc = "Surround current line" },
+				{ "gsS", mode = "n", desc = "Surround line (block)" },
+				{ "gsd", mode = "n", desc = "Surround delete" },
+				{ "gsc", mode = "n", desc = "Surround change" },
+				{ "gs", mode = "x", desc = "Surround selection" },
+				{ "gS", mode = "x", desc = "Surround selection (line)" },
+			},
+			config = function()
+				require("nvim-surround").setup({
+					keymaps = {
+						-- normal mode
+						normal = "gsa", -- add: gsa + textobject (e.g. gsa iw -> add around inner word)
+						normal_cur = "gss", -- add around current line
+						normal_line = "gsS", -- add around line with newlines
+						normal_cur_line = "gsS", -- (you can use a different one if you like)
+						-- visual mode
+						visual = "gs", -- surround selection
+						visual_line = "gS", -- surround selection (line)
+						-- delete/change
+						delete = "gsd",
+						change = "gsc",
+					},
+				})
+			end,
 		},
 		{
 			-- High-performance color highlighter

@@ -1,0 +1,34 @@
+# Use Java mode
+mode=java
+style=java
+
+# Indentation
+indent=spaces=4
+indent-switches
+indent-cases
+indent-col1-comments
+pad-oper
+pad-comma
+unpad-paren
+
+# Braces
+attach-namespaces
+attach-classes
+attach-inlines
+attach-extern-c
+attach-closing-while
+
+# Formatting
+max-code-length=160
+break-after-logical
+keep-one-line-statements
+keep-one-line-blocks
+add-braces
+
+# Alignments
+align-pointer=type
+align-reference=type
+
+# Other
+suffix=none
+

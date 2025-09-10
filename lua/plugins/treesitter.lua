@@ -41,6 +41,7 @@ return {
 		-- Optional: call setup if you want to override defaults
 		require("nvim-treesitter").setup({
 			-- install_dir = vim.fn.stdpath("data") .. "/site",
+			auto_install = true,
 		})
 
 		-- Optional: auto-start Tree-sitter for every buffer
@@ -52,4 +53,28 @@ return {
 			end,
 		})
 	end,
+
+	{
+		"nvim-treesitter/nvim-treesitter-context",
+		opts = {
+			enable = true, -- enable by default
+			max_lines = 6, -- how many lines of context to show (0 = no limit)
+			multiline_threshold = 20, -- collapse multiline nodes if over this
+			trim_scope = "outer", -- which scope to trim first
+			mode = "cursor", -- show context for scope under cursor
+			-- separator = "─", -- visual separator below the context header (nil to disable)
+			zindex = 40, -- draw above folds/signcolumn
+			on_attach = nil, -- function(bufnr) end  to filter filetypes if you like
+		},
+		config = function(_, opts)
+			require("treesitter-context").setup(opts)
+			-- useful keymaps
+			vim.keymap.set("n", "[c", function()
+				require("treesitter-context").go_to_context()
+			end, { desc = "TSContext: jump to parent context" })
+			vim.api.nvim_create_user_command("TSContextToggle", function()
+				require("treesitter-context").toggle()
+			end, { desc = "Toggle Treesitter Context" })
+		end,
+	},
 }

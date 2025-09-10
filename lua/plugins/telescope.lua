@@ -49,6 +49,7 @@ return {
 			-- You can put your default mappings / updates / etc. in here
 			--  All the info you're looking for is in `:help telescope.setup()`
 			defaults = {
+				path_display = { "truncate" },
 				mappings = {
 					i = {
 						["<C-k>"] = require("telescope.actions").move_selection_previous, -- move to prev result
@@ -72,6 +73,12 @@ return {
 			extensions = {
 				["ui-select"] = {
 					require("telescope.themes").get_dropdown(),
+				},
+				fzf = {
+					fuzzy = true, -- true: fuzzy match; false: exact match
+					override_generic_sorter = true, -- override default generic sorter
+					override_file_sorter = true, -- override default file sorter
+					case_mode = "smart_case", -- "smart_case" | "ignore_case" | "respect_case"
 				},
 			},
 		})
