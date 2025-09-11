@@ -11,8 +11,9 @@ return {
 		--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		config = function()
 			vim.cmd([[nnoremap \ :Neotree reveal<cr>]])
+			-- mykeymaps
 			vim.keymap.set("n", "<leader>e", ":Neotree toggle position=left<CR>", { noremap = true, silent = true }) -- focus file explorer
-			vim.keymap.set("n", "<leader>ngs", ":Neotree float git_status<CR>", { noremap = true, silent = true }) -- open git status window
+			vim.keymap.set("n", "<leader>gs", ":Neotree float git_status<CR>", { noremap = true, silent = true }) -- open git status window
 
 			require("neo-tree").setup({
 				sources = {
@@ -402,6 +403,7 @@ return {
 						nowait = true,
 					},
 					mappings = {
+						-- mykeymaps
 						["<space>"] = {
 							"toggle_node",
 							nowait = false, -- disable `nowait` if you have existing combos starting with this char that you want to use

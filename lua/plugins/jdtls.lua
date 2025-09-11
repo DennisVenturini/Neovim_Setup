@@ -35,7 +35,7 @@ return {
 						vim.keymap.set("n", lhs, rhs, { buffer = bufnr, desc = desc })
 					end
 
-					-- Java actions
+					-- mykeybinds
 					map("<leader>ji", jdtls.organize_imports, "Java: Organize Imports")
 					map("<leader>jv", jdtls.extract_variable, "Java: Extract Variable")
 					map("<leader>jc", jdtls.extract_constant, "Java: Extract Constant")

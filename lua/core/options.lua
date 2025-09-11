@@ -62,7 +62,8 @@ vim.wo.signcolumn = "yes" -- Keep signcolumn on by default (default: 'auto')
 
 vim.o.fileencoding = "utf-8" -- The encoding written to a file (default: 'utf-8')
 
-vim.o.cmdheight = 1 -- More space in the Neovim command line for displaying messages (default: 1)
+vim.o.showcmd = true
+vim.o.cmdheight = 0 -- More space in the Neovim command line for displaying messages (default: 1)
 
 vim.o.updatetime = 50 -- Decrease update time (default: 4000)
 vim.o.timeoutlen = 300 -- Time to wait for a mapped sequence to complete (in milliseconds) (default: 1000)

@@ -68,8 +68,9 @@ return {
 		},
 		config = function(_, opts)
 			require("treesitter-context").setup(opts)
-			-- useful keymaps
-			vim.keymap.set("n", "[c", function()
+
+			-- mykeymaps
+			vim.keymap.set("n", "<leader>yc", function()
 				require("treesitter-context").go_to_context()
 			end, { desc = "TSContext: jump to parent context" })
 			vim.api.nvim_create_user_command("TSContextToggle", function()

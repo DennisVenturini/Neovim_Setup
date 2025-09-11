@@ -52,6 +52,7 @@ return {
 				path_display = { "truncate" },
 				mappings = {
 					i = {
+						-- mykeymaps
 						["<C-k>"] = require("telescope.actions").move_selection_previous, -- move to prev result
 						["<C-j>"] = require("telescope.actions").move_selection_next, -- move to next result
 						["<C-l>"] = require("telescope.actions").select_default, -- open file
@@ -88,6 +89,7 @@ return {
 		pcall(require("telescope").load_extension, "ui-select")
 
 		-- See `:help telescope.builtin`
+		-- mykeymaps
 		local builtin = require("telescope.builtin")
 		vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
 		vim.keymap.set("n", "<leader>sg", builtin.git_files, { desc = "[S]earch [G]it" })
@@ -105,18 +107,26 @@ return {
 			builtin.grep_string({ search = vim.fn.input("Grep > ") })
 		end, { desc = "[S]earch [I]nside Project" })
 
+		-- Live grep but restricted to buffers you have open
+		vim.keymap.set("n", "<leader>so", function()
+			builtin.live_grep({
+				grep_open_files = true,
+				prompt_title = "Live Grep in Open Buffers",
+			})
+		end, { desc = "[S]earch [O]pen buffers" })
+
 		-- Slightly advanced example of overriding default behavior and theme
-		vim.keymap.set("n", "<leader>/", function()
+		vim.keymap.set("n", "<leader>sc", function()
 			-- You can pass additional configuration to Telescope to change the theme, layout, etc.
 			builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
 				winblend = 10,
 				previewer = false,
 			}))
-		end, { desc = "[/] Fuzzily search in current buffer" })
+		end, { desc = "[S]earch [C]urrent buffer" })
 
 		-- It's also possible to pass additional configuration options.
 		--  See `:help telescope.builtin.live_grep()` for information about particular keys
-		vim.keymap.set("n", "<leader>s/", function()
+		vim.keymap.set("n", "<leader>s<leader>", function()
 			builtin.live_grep({
 				grep_open_files = true,
 				prompt_title = "Live Grep in Open Files",

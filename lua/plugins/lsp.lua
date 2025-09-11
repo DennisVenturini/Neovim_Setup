@@ -41,26 +41,31 @@ return {
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("user-lsp-attach", { clear = true }),
 				callback = function(event)
-					local map = function(keys, func, desc, mode)
-						mode = mode or "n"
-						vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+					local function map(mode, lhs, rhs, desc)
+						vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = desc })
 					end
 
-					-- Your mappings
-					map("grn", vim.lsp.buf.rename, "[R]e[n]ame")
-					map("gra", vim.lsp.buf.code_action, "Code [A]ction", { "n", "x" })
-					map("grr", require("telescope.builtin").lsp_references, "[R]eferences")
-					map("gri", require("telescope.builtin").lsp_implementations, "[I]mplementation")
-					map("grd", require("telescope.builtin").lsp_definitions, "[D]efinition")
-					map("grD", vim.lsp.buf.declaration, "[D]eclaration")
-					map("gO", require("telescope.builtin").lsp_document_symbols, "Document Symbols")
-					map("gW", require("telescope.builtin").lsp_dynamic_workspace_symbols, "Workspace Symbols")
-					map("grt", require("telescope.builtin").lsp_type_definitions, "[T]ype Definition")
+					local nmode = "n"
+					local nxmode = { "n", "x" }
+					local nximode = { "n", "x", "i" }
+					local telescope = require("telescope.builtin")
+
+					-- mykeymaps
+					map(nmode, "<leader>ln", vim.lsp.buf.rename, "Re[n]ame")
+					map(nxmode, "<leader>la", vim.lsp.buf.code_action, "Code [A]ction")
+					map(nmode, "<leader>lr", telescope.lsp_references, "[R]eferences")
+					map(nmode, "<leader>li", telescope.lsp_implementations, "[I]mplementation")
+					map(nmode, "<leader>ld", telescope.lsp_definitions, "[D]efinition")
+					map(nmode, "<leader>lD", vim.lsp.buf.declaration, "[D]eclaration")
+					map(nmode, "<leader>ls", telescope.lsp_document_symbols, "Document [S]ymbols")
+					map(nmode, "<leader>lw", telescope.lsp_dynamic_workspace_symbols, "[W]orkspace Symbols")
+					map(nmode, "<leader>lt", telescope.lsp_type_definitions, "[T]ype Definition")
 
 					-- Nice diagnostics helpers
-					map("[d", vim.diagnostic.goto_prev, "Prev Diagnostic")
-					map("]d", vim.diagnostic.goto_next, "Next Diagnostic")
-					map("<leader>df", function()
+					map(nximode, "<C-K>", vim.lsp.buf.signature_help, "Open float signature help")
+					map(nmode, "<leader>dp", vim.diagnostic.goto_prev, "[P]rev Diagnostic")
+					map(nmode, "<leader>dn", vim.diagnostic.goto_next, "[N]ext Diagnostic")
+					map(nmode, "<leader>df", function()
 						vim.diagnostic.open_float(nil, { border = "rounded" })
 					end, "Line Diagnostics")
 
@@ -101,7 +106,7 @@ return {
 
 					-- Toggle inlay hints if supported
 					if client and supports(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
-						map("<leader>th", function()
+						map(nmode, "<leader>th", function()
 							vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
 						end, "[T]oggle Inlay [H]ints")
 					end

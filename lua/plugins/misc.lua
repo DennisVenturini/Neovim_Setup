@@ -15,6 +15,7 @@ return {
 			local opts = { noremap = true, silent = true }
 			-- vim.keymap.set("n", "<C-_>", require("Comment.api").toggle.linewise.current, opts)
 			-- vim.keymap.set("n", "<C-c>", require("Comment.api").toggle.linewise.current, opts)
+			-- mykeymaps
 			vim.keymap.set("n", "<C-p>", require("Comment.api").toggle.linewise.current, opts)
 			-- vim.keymap.set(
 			-- 	"v",
@@ -81,8 +82,17 @@ return {
 				-- Document existing key chains
 				spec = {
 					{ "<leader>s", group = "[S]earch" },
-					{ "<leader>t", group = "[T]oggle" },
+					{ "gs", group = "[S]urround" },
+					{ "<leader>t", group = "[T]abs & [T]oggle" },
 					{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+					{ "<leader>w", group = "[W]rite", mode = { "n", "v" } },
+					{ "<leader>l", group = "[L]sp", mode = { "n", "v" } },
+					{ "<leader>g", group = "[G]it", mode = { "n", "v" } },
+					{ "<leader>u", group = "[U]ndotree", mode = { "n", "v" } },
+					{ "<leader>n", group = "[N]oice", mode = { "n", "v" } },
+					{ "<leader>j", group = "[J]ava", mode = { "n", "v" } },
+					{ "<leader>y", group = "[Y]jump", mode = { "n", "v" } },
+					{ "<leader>v", group = "[V]indow Management", mode = { "n", "v" } },
 				},
 			},
 		},
@@ -104,29 +114,30 @@ return {
 			"kylechui/nvim-surround",
 			version = "*",
 			-- Lazy-load on first use and give which-key labels
+			-- mykeymaps
 			keys = {
-				{ "gsa", mode = "n", desc = "Surround add (operator)" },
-				{ "gss", mode = "n", desc = "Surround current line" },
-				{ "gsS", mode = "n", desc = "Surround line (block)" },
-				{ "gsd", mode = "n", desc = "Surround delete" },
+				{ "gsa", mode = "n", desc = "Surround [A]dd (operator)" },
+				{ "gsl", mode = "n", desc = "Surround current [L]ine" },
+				{ "gsb", mode = "n", desc = "Surround line (block)" },
+				{ "gsd", mode = "n", desc = "Surround [Delete" },
 				{ "gsc", mode = "n", desc = "Surround change" },
 				{ "gs", mode = "x", desc = "Surround selection" },
-				{ "gS", mode = "x", desc = "Surround selection (line)" },
+				{ "gs", mode = "x", desc = "Surround selection (line)" },
 			},
 			config = function()
 				require("nvim-surround").setup({
 					keymaps = {
 						-- normal mode
 						normal = "gsa", -- add: gsa + textobject (e.g. gsa iw -> add around inner word)
-						normal_cur = "gss", -- add around current line
-						normal_line = "gsS", -- add around line with newlines
-						normal_cur_line = "gsS", -- (you can use a different one if you like)
-						-- visual mode
-						visual = "gs", -- surround selection
-						visual_line = "gS", -- surround selection (line)
-						-- delete/change
+						normal_cur = "gsl", -- add around current line
+						normal_line = "gsb", -- add around line with newlines
 						delete = "gsd",
 						change = "gsc",
+						normal_cur_line = "gsc", -- (you can use a different one if you like)
+						-- visual mode
+						visual = "gs", -- surround selection
+						visual_line = "gs", -- surround selection (line)
+						-- delete/change
 					},
 				})
 			end,

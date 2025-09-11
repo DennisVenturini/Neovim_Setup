@@ -1,3 +1,14 @@
+local del = vim.keymap.del
+
+del({ "n", "x" }, "gra") -- code action
+del("n", "grn") -- rename
+del("n", "grr") -- references
+del("n", "gri") -- implementation
+del("n", "grt") -- type definition
+del({ "i", "s" }, "<C-s>") -- signature help in insert/select
+----------------------------------------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------------------------------------
 local function map(mode, lhs, rhs, desc)
 	vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = desc })
 end
@@ -90,10 +101,10 @@ map("n", "<leader>b", "<cmd> enew <CR>", "Buffers: new buffer") -- new buffer
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Window management
-map("n", "<leader>v", "<C-w>v", "Window management: split window vertically") -- split window vertically
-map("n", "<leader>h", "<C-w>s", "Window management: split window horizontally") -- split window horizontally
-map("n", "<leader>se", "<C-w>=", "Window management: make split windows equal width & height") -- make split windows equal width & height
-map("n", "<leader>xs", ":close<CR>", "Window management: close current split window") -- close current split window
+map("n", "<leader>vv", "<C-w>v", "Split window [V]ertically") -- split window vertically
+map("n", "<leader>vh", "<C-w>s", "Split window [H]orizontally") -- split window horizontally
+map("n", "<leader>ve", "<C-w>=", "Make split windows [E]qual width & height") -- make split windows equal width & height
+map("n", "<leader>vs", ":close<CR>", "Close current [S]plit window") -- close current split window
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
