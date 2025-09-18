@@ -2,24 +2,46 @@ return {
 	{
 		"saghen/blink.cmp",
 		version = "*",
-		-- dependencies = {
-		-- 	{
-		-- 		"L3MON4D3/LuaSnip",
-		-- 		build = (function()
-		-- 			if vim.fn.has("win32") == 1 or vim.fn.executable("make") == 0 then
-		-- 				return
-		-- 			end
-		-- 			return "make install_jsregexp"
-		-- 		end)(),
-		-- 		-- dependencies = { "rafamadriz/friendly-snippets" },
-		-- 		-- config = function()
-		-- 		-- 	require("luasnip").config.setup({})
-		-- 		-- 	require("luasnip.loaders.from_vscode").lazy_load()
-		-- 		-- end,
-		-- 	},
-		-- },
+		dependencies = {
+			{
+				"L3MON4D3/LuaSnip",
+				build = "make install_jsregexp",
+				event = "InsertEnter", -- load when you start typing
+				config = function()
+					local ls = require("luasnip")
+					ls.config.set_config({
+						history = true,
+						updateevents = "TextChanged,TextChangedI",
+						enable_autosnippets = false,
+					})
+					-- optional: your custom snippet paths
+					require("luasnip.loaders.from_lua").lazy_load({ paths = { "~/.config/nvim/snippets" } })
+					--
+					vim.keymap.set({ "i" }, "<C-n>", function()
+						ls.expand()
+					end, { silent = true })
+
+					vim.keymap.set({ "i", "s" }, "<C-L>", function()
+						ls.jump(1)
+					end, { silent = true })
+
+					vim.keymap.set({ "i", "s" }, "<C-J>", function()
+						ls.jump(-1)
+					end, { silent = true })
+
+					vim.keymap.set({ "i", "s" }, "<C-E>", function()
+						if ls.choice_active() then
+							ls.change_choice(1)
+						end
+					end, { silent = true })
+				end,
+			},
+		},
 		opts = {
 			-- sources like before
+
+			snippets = { preset = "luasnip" },
+
 			sources = {
 				default = { "lsp", "path", "buffer", "snippets" },
 			},
@@ -98,10 +120,11 @@ return {
 				["<C-f>"] = { "scroll_documentation_down" },
 				["<C-i>"] = { "accept" }, -- like cmp.confirm({ select = true })
 				["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
-				["<Tab>"] = { "snippet_forward", "select_next", "fallback" },
-				["<S-Tab>"] = { "snippet_backward", "select_prev", "fallback" },
-				["<C-l>"] = { "snippet_forward", "fallback" },
-				["<C-h>"] = { "snippet_backward", "fallback" },
+
+				-- ["<Tab>"] = { "snippet_forward", "select_next", "fallback" },
+				-- ["<S-Tab>"] = { "snippet_backward", "select_prev", "fallback" },
+				-- ["<C-j>"] = { "snippet_forward", "fallback" },
+				-- ["<C-k>"] = { "snippet_backward", "fallback" },
 			},
 		},
 	},
