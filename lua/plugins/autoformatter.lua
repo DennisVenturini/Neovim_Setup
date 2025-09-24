@@ -33,6 +33,11 @@ return {
 				shfmt = {
 					append_args = { "-i", "2" },
 				},
+				stylua = {
+					command = "stylua",
+					args = { "--search-parent-directories", "--stdin-filepath", "$FILENAME", "-" },
+					stdin = true,
+				},
 				astyle = {
 					command = "astyle",
 					args = { "--options=" .. vim.fn.expand("~/.config/nvim/java_style/astylerc") },
