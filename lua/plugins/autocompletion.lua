@@ -5,49 +5,15 @@ return {
 		dependencies = {
 			{
 				"L3MON4D3/LuaSnip",
-				build = "make install_jsregexp",
-				event = "InsertEnter", -- load when you start typing
-				config = function()
-					local ls = require("luasnip")
-					ls.config.set_config({
-						history = true,
-						updateevents = "TextChanged,TextChangedI",
-						enable_autosnippets = false,
-					})
-					-- optional: your custom snippet paths
-					require("luasnip.loaders.from_lua").lazy_load({ paths = { "~/.config/nvim/snippets" } })
-					--
-					vim.keymap.set({ "i" }, "<C-n>", function()
-						ls.expand()
-					end, { silent = true })
-
-					vim.keymap.set({ "i", "s" }, "<C-L>", function()
-						ls.jump(1)
-					end, { silent = true })
-
-					vim.keymap.set({ "i", "s" }, "<C-J>", function()
-						ls.jump(-1)
-					end, { silent = true })
-
-					vim.keymap.set({ "i", "s" }, "<C-E>", function()
-						if ls.choice_active() then
-							ls.change_choice(1)
-						end
-					end, { silent = true })
-				end,
 			},
 		},
 		opts = {
 			-- sources like before
-
 			snippets = { preset = "luasnip" },
-
 			sources = {
 				default = { "lsp", "path", "buffer", "snippets" },
 			},
-
 			signature = { enabled = true },
-
 			-- Kind icons similar to your cmp icons (optional; tweak to taste)
 			appearance = {
 				kind_icons = {
@@ -78,7 +44,6 @@ return {
 					TypeParameter = "󰊄",
 				},
 			},
-
 			-- Make the popup show: [icon] label  |  [LSP]/[Snippet]/[Buffer]/[Path]
 			completion = {
 				menu = {
@@ -121,10 +86,10 @@ return {
 				["<C-i>"] = { "accept" }, -- like cmp.confirm({ select = true })
 				["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
 
-				-- ["<Tab>"] = { "snippet_forward", "select_next", "fallback" },
-				-- ["<S-Tab>"] = { "snippet_backward", "select_prev", "fallback" },
-				-- ["<C-j>"] = { "snippet_forward", "fallback" },
-				-- ["<C-k>"] = { "snippet_backward", "fallback" },
+				["<Tab>"] = { "snippet_forward", "fallback" },
+				["<S-Tab>"] = { "snippet_backward", "fallback" },
+				["<C-j>"] = { "snippet_forward", "fallback" },
+				["<C-k>"] = { "snippet_backward", "fallback" },
 			},
 		},
 	},

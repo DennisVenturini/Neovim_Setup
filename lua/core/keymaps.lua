@@ -23,6 +23,7 @@ map("n", "<leader>f", "<cmd>Ex<cr>", "Netrw: Explore")
 ----------------------------------------------------------------------------------------------------------------------------------
 
 ----------------------------------------------------------------------------------------------------------------------------------
+-- Save and Quit
 map("n", "<C-s>", "<cmd>w<cr>", "Save")
 map("n", "<leader>wa", "<cmd>wa!<cr>", "Save all!")
 
@@ -48,8 +49,8 @@ map("n", "J", "mzJ`z", "Cursor stays in place")
 
 ----------------------------------------------------------------------------------------------------------------------------------
 -- Quickfix list navigation
-map("n", "<M-j>", "<cmd>cnext<CR>zz", "Quickfix next")
-map("n", "<M-k>", "<cmd>cprev<CR>zz", "Quickfix prev")
+map("n", "<M-j>", "<Cmd>try | cnext | catch | cfirst | catch | endtry<CR>", "Quickfix next")
+map("n", "<M-k>", "<Cmd>try | cprevious | catch | clast | catch | endtry<CR>", "Quickfix prev")
 map("n", "<M-o>", function()
 	for _, win in ipairs(vim.fn.getwininfo()) do
 		if win.quickfix == 1 then
@@ -84,10 +85,10 @@ map("v", "K", ":m '<-2<CR>gv=gv", "Move visual selection up")
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Empty line BELOW current line
-vim.keymap.set("n", "<M-k>", ":<C-u>put =''<CR>", { desc = "Empty line below (Normal mode)" })
+vim.keymap.set("n", "<M-l>", ":<C-u>put =''<CR>", { desc = "Empty line below (Normal mode)" })
 
 -- Empty line ABOVE current line
-vim.keymap.set("n", "<M-l>", ":<C-u>put! =''<CR>", { desc = "Empty line above (Normal mode)" })
+vim.keymap.set("n", "<M-h>", ":<C-u>put! =''<CR>", { desc = "Empty line above (Normal mode)" })
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

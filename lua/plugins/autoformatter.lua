@@ -9,21 +9,25 @@ return {
 		opts = {
 			-- Define your formatters
 			formatters_by_ft = {
-				lua = { "stylua" },
-				python = { "ruff_format", "ruff_organize_imports", "black" },
 				javascript = { "prettierd", "prettier", "biome" },
 				typescript = { "prettierd", "prettier", "biome" },
 				javascriptreact = { "prettierd", "prettier", "biome" },
 				typescriptreact = { "prettierd", "prettier", "biome" },
+				html = { "prettierd", "prettier" },
+				css = { "prettierd", "prettier" },
+
+				lua = { "stylua" },
 				json = { "prettierd", "prettier" },
 				yaml = { "yamlfmt" },
+				xml = { "xmlformatter" },
+				sh = { "shfmt" },
+
+				python = { "ruff_format", "ruff_organize_imports", "black" },
 				go = { "gofumpt", "goimports" },
 				rust = { "rustfmt" },
-				sh = { "shfmt" },
 				c = { "clang_format" },
 				cpp = { "clang_format" },
 				java = { "astyle" },
-				xml = { "xmlformatter" },
 				-- ["*"] = { "lsp_format" },
 			},
 			-- Set up format-on-save
@@ -32,6 +36,19 @@ return {
 			formatters = {
 				shfmt = {
 					append_args = { "-i", "2" },
+				},
+				prettier = {
+					-- fallback if prettierd is missing
+					prepend_args = {
+						"--parser",
+						"html",
+						"--embedded-language-formatting",
+						"auto",
+						"--tab-width",
+						"4",
+						"--use-tabs",
+						"false",
+					},
 				},
 				stylua = {
 					command = "stylua",
@@ -53,6 +70,14 @@ return {
 		init = function()
 			-- If you want the formatexpr, here is the place to set it
 			vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+		end,
+
+		format_on_save = function(buf)
+			local ft = vim.bo[buf].filetype
+			if ft == "html" or ft == "css" then
+				return { lsp_fallback = false, timeout_ms = 500 }
+			end
+			return { lsp_fallback = true, timeout_ms = 500 }
 		end,
 	},
 }

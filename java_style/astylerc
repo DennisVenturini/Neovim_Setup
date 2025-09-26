@@ -10,6 +10,7 @@ indent-col1-comments
 pad-oper
 pad-comma
 unpad-paren
+pad-header
 
 # Braces
 attach-namespaces
