@@ -64,6 +64,7 @@ return {
 							signatureHelp = { enabled = true },
 							eclipse = { downloadSources = true },
 							maven = { downloadSources = true },
+							import = { gradle = { downloadSources = true } },
 							references = { includeDecompiledSources = true },
 							format = { enabled = false },
 							configuration = {

@@ -22,6 +22,14 @@ local conds_expand = require("luasnip.extras.conditions.expand")
 
 return {
 
+	snippet("sni", {
+		text_Node('snippet("'),
+		insert_Node(1, "name"),
+		text_Node({ '", {', "\t" }),
+		insert_Node(2, "node"),
+		text_Node({ "", "})," }),
+	}),
+
 	-- snip function
 	snippet("fn", {
 		insert_Node(1, "name"),
