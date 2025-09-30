@@ -1,4 +1,5 @@
 local lua_Snip = require("luasnip")
+local helper = require("snippets.helpers")
 -- some shorthands...
 local snippet = lua_Snip.snippet
 local snippet_Node = lua_Snip.snippet_node

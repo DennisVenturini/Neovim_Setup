@@ -6,27 +6,31 @@ local insert_Node = lua_Snip.insert_node
 local choice_Node = lua_Snip.choice_node
 local dynamic_Node = lua_Snip.dynamic_node
 
+local helper = {}
+
 -- args is a table, where 1 is the text in Placeholder 1, 2 the text in
 -- placeholder 2,...
-local function copy(args)
+function helper.copy(args)
 	return args[1]
 end
 
 -- 'recursive' dynamic snippet. Expands to some text followed by itself.
-local rec_ls
-rec_ls = function()
+helper.rec_ls = function()
 	return snippet_Node(
 		nil,
-		choice_Node(1, {
-			-- Order is important, sn(...) first would cause infinite loop of expansion.
-			text_Node(""),
-			snippet_Node(nil, { text_Node({ "", "\t\\item " }), insert_Node(1), dynamic_Node(2, rec_ls, {}) }),
+		choice_Node(2, {
+			snippet_Node(nil, {}), -- empty choice: stop recursion safely
+			snippet_Node(nil, {
+				text_Node({ "", "\t\\item " }),
+				insert_Node(1),
+				dynamic_Node(2, helper.rec_ls, {}),
+			}),
 		})
 	)
 end
 
 -- complicated function for dynamicNode.
-local function jdocsnip(args, _, old_state)
+function helper.jdocsnip(args, _, old_state)
 	-- !!! old_state is used to preserve user-input here. DON'T DO IT THAT WAY!
 	-- Using a restoreNode instead is much easier.
 	-- View this only as an example on how old_state functions.
@@ -104,7 +108,7 @@ local function jdocsnip(args, _, old_state)
 end
 
 -- Make sure to not pass an invalid command, as io.popen() may write over nvim-text.
-local function bash(_, _, command)
+function helper.bash(_, _, command)
 	local file = io.popen(command, "r")
 	local res = {}
 	for line in file:lines() do
@@ -115,7 +119,9 @@ end
 
 -- Returns a snippet_node wrapped around an insertNode whose initial
 -- text value is set to the current date in the desired format.
-local date_input = function(args, snip, old_state, fmt)
+helper.date_input = function(args, snip, old_state, fmt)
 	local fmt = fmt or "%Y-%m-%d"
 	return snippet_Node(nil, insert_Node(1, os.date(fmt)))
 end
+
+return helper

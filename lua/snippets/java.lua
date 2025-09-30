@@ -1,4 +1,5 @@
 local lua_Snip = require("luasnip")
+local helper = require("snippets.helpers")
 -- some shorthands...
 local snippet = lua_Snip.snippet
 local snippet_Node = lua_Snip.snippet_node
@@ -20,11 +21,93 @@ local types = require("luasnip.util.types")
 local conds = require("luasnip.extras.conditions")
 local conds_expand = require("luasnip.extras.conditions.expand")
 
+local recurs
+recurs = function()
+	return snippet_Node(nil, {
+		choice_Node(1, {
+			snippet_Node(nil, {
+				insert_Node(1, ""),
+			}),
+
+			snippet_Node(nil, {
+				text_Node(", "),
+				insert_Node(1, "name"),
+				dynamic_Node(2, recurs, {}),
+			}),
+		}),
+	})
+end
+
 return {
+
 	snippet("class", {
-		text_Node("class"),
+		choice_Node(1, {
+			text_Node("public "),
+			text_Node("private "),
+			text_Node("protected "),
+		}),
+
+		choice_Node(2, {
+			text_Node(""),
+			text_Node("static "),
+		}),
+
+		text_Node("class "),
+		insert_Node(3, "name"),
+		text_Node(" "),
+
+		choice_Node(4, {
+			snippet_Node(nil, {
+				text_Node(""),
+				insert_Node(1, ""),
+			}),
+
+			snippet_Node(nil, {
+				text_Node("extends "),
+				insert_Node(1, "name"),
+				text_Node(" "),
+			}),
+		}),
+
+		choice_Node(5, {
+			snippet_Node(nil, {
+				insert_Node(1, ""),
+			}),
+
+			snippet_Node(nil, {
+				text_Node("implements "),
+				insert_Node(1, "name"),
+				dynamic_Node(2, recurs, {}),
+			}),
+		}),
+
+		text_Node({ "{", "\t" }),
+		insert_Node(6, "body"),
+		text_Node({ "", "}" }),
 	}),
 
+	-- Snip Public private protected static final String
+	snippet("pfss", {
+		choice_Node(1, {
+			text_Node("public "),
+			text_Node("private "),
+			text_Node("protected "),
+		}),
+		choice_Node(2, {
+			text_Node(""),
+			text_Node("static "),
+		}),
+		choice_Node(3, {
+			text_Node(""),
+			text_Node("final "),
+		}),
+		choice_Node(4, {
+			text_Node(""),
+			text_Node("String "),
+		}),
+	}),
+
+	-- Snip Public private protected static final
 	snippet("pfs", {
 		choice_Node(1, {
 			text_Node("public "),
@@ -41,19 +124,27 @@ return {
 		}),
 	}),
 
+	-- Snip ArrayList
 	snippet("lar", {
 		text_Node("ArrayList<"),
 		insert_Node(1, "class"),
 		text_Node("> "),
 		insert_Node(2, "name"),
+
 		choice_Node(3, {
-			text_Node(";"),
-			snippet_Node(4, {
-				text_Node(" = "),
-				restore_Node(1, "assign", insert_Node(1, "assign")),
+			snippet_Node(nil, {
+				text_Node(";"),
+				insert_Node(1, ""),
 			}),
-			snippet_Node(5, {
+
+			snippet_Node(nil, {
+				text_Node(" = "),
+				insert_Node(1, ""),
+			}),
+
+			snippet_Node(nil, {
 				text_Node(" = new ArrayList<>();"),
+				insert_Node(1, ""),
 			}),
 		}),
 	}),
