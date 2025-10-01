@@ -21,24 +21,65 @@ local types = require("luasnip.util.types")
 local conds = require("luasnip.extras.conditions")
 local conds_expand = require("luasnip.extras.conditions.expand")
 
-local recurs
-recurs = function()
-	return snippet_Node(nil, {
+return {
+
+	snippet("if", {
+		text_Node("if ("),
+
 		choice_Node(1, {
+			insert_Node(1, ""),
+			text_Node("!"),
+		}),
+
+		choice_Node(2, {
+			snippet_Node(nil, {
+				insert_Node(1, "single boolean"),
+			}),
+
+			snippet_Node(nil, {
+				insert_Node(1, "conditional"),
+
+				choice_Node(2, {
+					text_Node(" == "),
+					text_Node(" !="),
+					text_Node(" > "),
+					text_Node(" >= "),
+					text_Node(" <  "),
+					text_Node(" <= "),
+				}),
+
+				choice_Node(3, {
+					text_Node(""),
+					text_Node("!"),
+				}),
+				insert_Node(4, "conditional"),
+			}),
+		}),
+
+		choice_Node(3, {
 			snippet_Node(nil, {
 				insert_Node(1, ""),
 			}),
 
 			snippet_Node(nil, {
-				text_Node(", "),
-				insert_Node(1, "name"),
-				dynamic_Node(2, recurs, {}),
+				dynamic_Node(1, helper.recursive_if_conditionals, {}),
 			}),
 		}),
-	})
-end
 
-return {
+		text_Node({ ") {", "\t" }),
+		insert_Node(4, "body"),
+		text_Node({ "", "}" }),
+
+		choice_Node(5, {
+			snippet_Node(nil, {
+				insert_Node(1, ""),
+			}),
+
+			snippet_Node(nil, {
+				text_Node(" else if("),
+			}),
+		}),
+	}),
 
 	snippet("class", {
 		choice_Node(1, {
@@ -58,7 +99,6 @@ return {
 
 		choice_Node(4, {
 			snippet_Node(nil, {
-				text_Node(""),
 				insert_Node(1, ""),
 			}),
 
@@ -77,7 +117,7 @@ return {
 			snippet_Node(nil, {
 				text_Node("implements "),
 				insert_Node(1, "name"),
-				dynamic_Node(2, recurs, {}),
+				dynamic_Node(2, helper.recursive_insert_with_comma, {}),
 			}),
 		}),
 

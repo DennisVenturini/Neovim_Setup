@@ -14,6 +14,106 @@ function helper.copy(args)
 	return args[1]
 end
 
+helper.recursive_insert_with_comma = function()
+	return snippet_Node(nil, {
+		choice_Node(1, {
+			snippet_Node(nil, {
+				insert_Node(1, ""),
+			}),
+
+			snippet_Node(nil, {
+				text_Node(", "),
+				insert_Node(1, "name"),
+				dynamic_Node(2, helper.recursive_insert_with_comma, {}),
+			}),
+		}),
+	})
+end
+
+helper.if_conditionals = function()
+	return snippet_Node(nil, {
+		choice_Node(nil, {
+			insert_Node(1, ""),
+			text_Node("!"),
+		}),
+
+		choice_Node(nil, {
+			snippet_Node(nil, {
+				insert_Node(1, "single boolean"),
+			}),
+
+			snippet_Node(nil, {
+				insert_Node(1, "conditional"),
+
+				choice_Node(2, {
+					text_Node(" == "),
+					text_Node(" !="),
+					text_Node(" > "),
+					text_Node(" >= "),
+					text_Node(" <  "),
+					text_Node(" <= "),
+				}),
+
+				choice_Node(3, {
+					text_Node(""),
+					text_Node("!"),
+				}),
+				insert_Node(4, "conditional"),
+			}),
+		}),
+	})
+end
+
+helper.recursive_if_conditionals = function()
+	return snippet_Node(nil, {
+		choice_Node(1, {
+			snippet_Node(nil, {
+				insert_Node(1, ""),
+			}),
+
+			snippet_Node(nil, {
+				insert_Node(1, ""),
+				choice_Node(2, {
+					text_Node(" && "),
+					text_Node(" || "),
+				}),
+
+				choice_Node(3, {
+					insert_Node(1, ""),
+					text_Node("!"),
+				}),
+
+				choice_Node(4, {
+					snippet_Node(nil, {
+						insert_Node(1, "single boolean"),
+					}),
+
+					snippet_Node(nil, {
+						insert_Node(1, "conditional"),
+
+						choice_Node(2, {
+							text_Node(" == "),
+							text_Node(" !="),
+							text_Node(" > "),
+							text_Node(" >= "),
+							text_Node(" <  "),
+							text_Node(" <= "),
+						}),
+
+						choice_Node(3, {
+							text_Node(""),
+							text_Node("!"),
+						}),
+						insert_Node(4, "conditional"),
+					}),
+				}),
+
+				dynamic_Node(5, helper.recursive_if_conditionals, {}),
+			}),
+		}),
+	})
+end
+
 -- 'recursive' dynamic snippet. Expands to some text followed by itself.
 helper.rec_ls = function()
 	return snippet_Node(

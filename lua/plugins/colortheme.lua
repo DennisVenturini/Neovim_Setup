@@ -19,5 +19,12 @@ return {
 		-- Like many other themes, this one has different styles, and you could load
 		-- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
 		vim.cmd.colorscheme("tokyonight-night")
+
+		-- 💡 override flash.nvim label color here
+		vim.api.nvim_set_hl(0, "FlashLabel", {
+			bg = "#f7768e", -- pick any color you like
+			fg = "#1a1b26", -- usually your editor background or a contrasting fg
+			bold = true,
+		})
 	end,
 }
