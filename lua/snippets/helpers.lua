@@ -14,6 +14,45 @@ function helper.copy(args)
 	return args[1]
 end
 
+helper.switch_body = function()
+	return snippet_Node(nil, {
+		choice_Node(1, {
+			snippet_Node(nil, {
+				text_Node({ "", "\tcase " }),
+				insert_Node(1, "value"),
+				text_Node({ ":", "\t\t" }),
+				insert_Node(2, "body"),
+
+				text_Node({ "", "\t\tbreak;" }),
+				text_Node({ "" }),
+			}),
+
+			snippet_Node(nil, {
+				text_Node({ "", "\tcase " }),
+				insert_Node(1, "value"),
+				text_Node({ ":", "\t\t" }),
+				insert_Node(2, "body"),
+			}),
+		}),
+	})
+end
+
+helper.recursive_switch_body = function()
+	return snippet_Node(nil, {
+		choice_Node(1, {
+			snippet_Node(nil, {
+				insert_Node(1, ""),
+			}),
+
+			snippet_Node(nil, {
+				insert_Node(1, ""),
+				dynamic_Node(2, helper.switch_body, {}),
+				dynamic_Node(3, helper.recursive_switch_body, {}),
+			}),
+		}),
+	})
+end
+
 helper.recursive_insert_with_comma = function()
 	return snippet_Node(nil, {
 		choice_Node(1, {
@@ -32,20 +71,25 @@ end
 
 helper.if_conditionals = function()
 	return snippet_Node(nil, {
-		choice_Node(nil, {
-			insert_Node(1, ""),
-			text_Node("!"),
-		}),
-
-		choice_Node(nil, {
+		choice_Node(1, {
 			snippet_Node(nil, {
-				insert_Node(1, "single boolean"),
+				choice_Node(1, {
+					text_Node(""),
+					text_Node("!"),
+				}),
+
+				insert_Node(2, "single boolean"),
 			}),
 
 			snippet_Node(nil, {
-				insert_Node(1, "conditional"),
+				choice_Node(1, {
+					text_Node(""),
+					text_Node("!"),
+				}),
 
-				choice_Node(2, {
+				insert_Node(2, "conditional"),
+
+				choice_Node(3, {
 					text_Node(" == "),
 					text_Node(" !="),
 					text_Node(" > "),
@@ -54,11 +98,12 @@ helper.if_conditionals = function()
 					text_Node(" <= "),
 				}),
 
-				choice_Node(3, {
+				choice_Node(4, {
 					text_Node(""),
 					text_Node("!"),
 				}),
-				insert_Node(4, "conditional"),
+
+				insert_Node(5, "conditional"),
 			}),
 		}),
 	})
@@ -78,37 +123,8 @@ helper.recursive_if_conditionals = function()
 					text_Node(" || "),
 				}),
 
-				choice_Node(3, {
-					insert_Node(1, ""),
-					text_Node("!"),
-				}),
-
-				choice_Node(4, {
-					snippet_Node(nil, {
-						insert_Node(1, "single boolean"),
-					}),
-
-					snippet_Node(nil, {
-						insert_Node(1, "conditional"),
-
-						choice_Node(2, {
-							text_Node(" == "),
-							text_Node(" !="),
-							text_Node(" > "),
-							text_Node(" >= "),
-							text_Node(" <  "),
-							text_Node(" <= "),
-						}),
-
-						choice_Node(3, {
-							text_Node(""),
-							text_Node("!"),
-						}),
-						insert_Node(4, "conditional"),
-					}),
-				}),
-
-				dynamic_Node(5, helper.recursive_if_conditionals, {}),
+				dynamic_Node(3, helper.if_conditionals, {}),
+				dynamic_Node(4, helper.recursive_if_conditionals, {}),
 			}),
 		}),
 	})

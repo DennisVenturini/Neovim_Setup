@@ -23,40 +23,59 @@ local conds_expand = require("luasnip.extras.conditions.expand")
 
 return {
 
-	snippet("if", {
-		text_Node("if ("),
-
-		choice_Node(1, {
-			insert_Node(1, ""),
-			text_Node("!"),
-		}),
+	snippet("annotation", {
+		text_Node("@"),
+		insert_Node(1, "name"),
 
 		choice_Node(2, {
 			snippet_Node(nil, {
-				insert_Node(1, "single boolean"),
-			}),
+				text_Node("("),
+				insert_Node(1, "single"),
 
-			snippet_Node(nil, {
-				insert_Node(1, "conditional"),
-
-				choice_Node(2, {
-					text_Node(" == "),
-					text_Node(" !="),
-					text_Node(" > "),
-					text_Node(" >= "),
-					text_Node(" <  "),
-					text_Node(" <= "),
-				}),
-
-				choice_Node(3, {
-					text_Node(""),
-					text_Node("!"),
-				}),
-				insert_Node(4, "conditional"),
+				text_Node(")"),
 			}),
 		}),
+	}),
 
-		choice_Node(3, {
+	snippet("var", {
+		choice_Node(1, {
+			text_Node(""),
+			text_Node("final "),
+		}),
+
+		insert_Node(2, ""),
+		text_Node(" "),
+		insert_Node(3, ""),
+		text_Node(" = "),
+
+		insert_Node(4, ""),
+		function_Node(function(_, snip)
+			return snip.env.SELECT_DEDENT or ""
+		end, {}),
+		text_Node({ ";", "" }),
+	}),
+
+	snippet("switch", {
+		text_Node("switch ("),
+		insert_Node(1, "expression"),
+
+		text_Node(") {"),
+
+		snippet_Node(2, {
+			dynamic_Node(1, helper.switch_body, {}),
+			dynamic_Node(2, helper.recursive_switch_body, {}),
+		}),
+
+		text_Node({ "", "}", "" }),
+		insert_Node(0, ""),
+	}),
+
+	snippet("if", {
+		text_Node("if ("),
+
+		dynamic_Node(1, helper.if_conditionals, {}),
+
+		choice_Node(2, {
 			snippet_Node(nil, {
 				insert_Node(1, ""),
 			}),
@@ -67,10 +86,15 @@ return {
 		}),
 
 		text_Node({ ") {", "\t" }),
-		insert_Node(4, "body"),
+
+		insert_Node(3, ""),
+		function_Node(function(_, snip)
+			return snip.env.SELECT_DEDENT or ""
+		end, {}),
+
 		text_Node({ "", "}" }),
 
-		choice_Node(5, {
+		choice_Node(4, {
 			snippet_Node(nil, {
 				insert_Node(1, ""),
 			}),
@@ -122,7 +146,12 @@ return {
 		}),
 
 		text_Node({ "{", "\t" }),
+
 		insert_Node(6, "body"),
+		function_Node(function(_, snip)
+			return snip.env.SELECT_DEDENT or ""
+		end, {}),
+
 		text_Node({ "", "}" }),
 	}),
 
@@ -168,6 +197,10 @@ return {
 	snippet("lar", {
 		text_Node("ArrayList<"),
 		insert_Node(1, "class"),
+		function_Node(function(_, snip)
+			return snip.env.SELECT_DEDENT or ""
+		end, {}),
+
 		text_Node("> "),
 		insert_Node(2, "name"),
 
