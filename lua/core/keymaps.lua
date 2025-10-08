@@ -9,6 +9,15 @@ del({ "i", "s" }, "<C-s>") -- signature help in insert/select
 ----------------------------------------------------------------------------------------------------------------------------------
 
 ----------------------------------------------------------------------------------------------------------------------------------
+vim.api.nvim_create_user_command("ClearRegisters", function()
+	for _, reg in ipairs(vim.split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-"*+~:.%#=', "")) do
+		vim.fn.setreg(reg, {})
+	end
+	print("✨ All registers cleared!")
+end, {})
+----------------------------------------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------------------------------------
 local function map(mode, lhs, rhs, desc)
 	vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = desc })
 end

@@ -13,7 +13,7 @@ return {
 				typescript = { "prettierd", "prettier", "biome" },
 				javascriptreact = { "prettierd", "prettier", "biome" },
 				typescriptreact = { "prettierd", "prettier", "biome" },
-				html = { "prettierd", "prettier" },
+				html = { "prettier" },
 				css = { "prettierd", "prettier" },
 
 				lua = { "stylua" },
@@ -48,6 +48,24 @@ return {
 						"4",
 						"--use-tabs",
 						"false",
+						"--print-width",
+						"160",
+						"--single-quote",
+						"true",
+					},
+				},
+				prettierd = {
+					prepend_args = {
+						"--print-width",
+						"160",
+						"--tab-width",
+						"4",
+						"--use-tabs",
+						"false",
+						"--single-quote",
+						"true",
+						"--embedded-language-formatting",
+						"auto",
 					},
 				},
 				stylua = {

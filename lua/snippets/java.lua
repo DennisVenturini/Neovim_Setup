@@ -34,6 +34,10 @@ return {
 
 				text_Node(")"),
 			}),
+
+			snippet_Node(nil, {
+				insert_Node(1, ""),
+			}),
 		}),
 	}),
 

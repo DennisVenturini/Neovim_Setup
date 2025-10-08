@@ -17,6 +17,16 @@ return {
 						"yamlls",
 						"lua_ls",
 						"lemminx",
+						"bashls",
+						"dockerls",
+						"gopls",
+						"jdtls",
+						"pyright",
+						"rust_analyzer",
+						"sqlls",
+						"tailwindcss",
+						"terraformls",
+						"ts_ls",
 					},
 					automatic_enable = {
 						-- auto-enable everything installed by Mason EXCEPT jdtls (we’ll handle Java separately)
@@ -141,20 +151,52 @@ return {
 			-- Capabilities from blink.cmp
 			------------------------------------------------------------------------
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
-
 			------------------------------------------------------------------------
 			-- Manual per-server tweaks (only where you need overrides)
 			-- mason-lspconfig v2 auto-enables servers, but we can still call lspconfig
 			-- again to add settings/cmd/etc. The last setup wins.
 			------------------------------------------------------------------------
-			local lspconfig = require("lspconfig")
 
+			---------------------------------------------------------------------------------------------------------------------------------------------------------
 			-- TypeScript (new name ts_ls)
-			lspconfig.ts_ls.setup({
+			vim.lsp.config.ts_ls = {
 				capabilities = capabilities,
-			})
+				filetypes = {
+					"javascript",
+					"javascriptreact",
+					"typescript",
+					"typescriptreact",
+				},
+				init_options = {
+					hostInfo = "neovim",
+				},
+			}
+			vim.lsp.enable("ts_ls")
+
+			-- Web
+			vim.lsp.config.html = {
+				capabilities = capabilities,
+				filetypes = { "html" },
+				init_options = {
+					provideFormatter = true,
+					embeddedLanguages = {
+						css = true,
+						javascript = true,
+					},
+				},
+			}
+			vim.lsp.enable("html")
+			vim.lsp.config.cssls = { capabilities = capabilities }
+			vim.lsp.enable("cssls")
+			vim.lsp.config.jsonls = { capabilities = capabilities }
+			vim.lsp.enable("jsonls")
+			vim.lsp.config.yamlls = { capabilities = capabilities }
+			vim.lsp.enable("yamlls")
+			---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			---------------------------------------------------------------------------------------------------------------------------------------------------------
 			-- C/C++
-			lspconfig.clangd.setup({
+			vim.lsp.config.clangd = {
 				capabilities = vim.tbl_deep_extend("force", {}, capabilities, { offsetEncoding = { "utf-16" } }),
 				keys = {
 					{ "grh", "<cmd>ClangdSwitchSourceHeader<CR>", desc = "LSP: Switch Source/Header" },
@@ -179,10 +221,13 @@ return {
 						or util.root_pattern("compile_commands.json", "compile_flags.txt")(fname)
 						or util.path.dirname(fname)
 				end,
-			})
+			}
+			vim.lsp.enable("clangd")
+			---------------------------------------------------------------------------------------------------------------------------------------------------------
 
+			---------------------------------------------------------------------------------------------------------------------------------------------------------
 			-- Python: pylsp (navigation/completion)
-			lspconfig.pylsp.setup({
+			vim.lsp.config.pylsp = {
 				capabilities = capabilities,
 				settings = {
 					pylsp = {
@@ -200,16 +245,13 @@ return {
 						},
 					},
 				},
-			})
+			}
+			vim.lsp.enable("pylsp")
+			---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-			-- Web
-			lspconfig.html.setup({ capabilities = capabilities })
-			lspconfig.cssls.setup({ capabilities = capabilities })
-			lspconfig.jsonls.setup({ capabilities = capabilities })
-			lspconfig.yamlls.setup({ capabilities = capabilities })
-
+			---------------------------------------------------------------------------------------------------------------------------------------------------------
 			-- Lua (let conform handle formatting)
-			lspconfig.lua_ls.setup({
+			vim.lsp.config.lua_ls = {
 				capabilities = capabilities,
 				settings = {
 					Lua = {
@@ -220,7 +262,9 @@ return {
 						format = { enable = false },
 					},
 				},
-			})
+			}
+			vim.lsp.enable("lua_ls")
+			---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 			------------------------------------------------------------------------
 			-- Ensure tools are installed (Mason Tool Installer)
@@ -234,12 +278,17 @@ return {
 				-- "json-lsp",
 				-- "yaml-language-server",
 				-- "lua-language-server",
+
 				-- formatters you use with conform
 				"stylua",
 				"clang-format",
 				"ruff",
+				"prettierd",
 				"prettier",
 				"xmlformatter",
+				"checkmake",
+				"yamlfmt",
+				"shfmt",
 				-- add more as you like (e.g. "prettierd", "shfmt", "black", "ruff")
 			}
 			require("mason-tool-installer").setup({ ensure_installed = ensure })
