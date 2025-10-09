@@ -63,6 +63,12 @@ return {
 		{
 			-- Powerful Git integration for Vim
 			"tpope/vim-fugitive",
+			cmd = { "Git", "G", "Gdiffsplit", "Gblame" },
+			keys = {
+				{ "<leader>gs", "<cmd>Git<CR>", desc = "Git status (Fugitive)" },
+				{ "<leader>gb", "<cmd>Git blame<CR>", desc = "Git blame" },
+				{ "<leader>gd", "<cmd>Gdiffsplit<CR>", desc = "Git diff split" },
+			},
 		},
 		{
 			-- GitHub integration for vim-fugitive
