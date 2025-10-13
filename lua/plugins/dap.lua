@@ -52,7 +52,7 @@ return {
 			dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
 		end, { desc = "Conditional Breakpoint" })
 
-		vim.keymap.set("n", "<leader>bc", function()
+		vim.keymap.set("n", "<leader>bl", function()
 			dap.repl.toggle()
 		end, { desc = "Toggle DAP REPL" })
 
