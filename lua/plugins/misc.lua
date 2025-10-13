@@ -99,6 +99,7 @@ return {
 					{ "<leader>j", group = "[J]ava", mode = { "n", "v" } },
 					{ "<leader>y", group = "[Y]jump", mode = { "n", "v" } },
 					{ "<leader>v", group = "[V]indow Management", mode = { "n", "v" } },
+					{ "<leader>b", group = "De[B]ugger", mode = { "n", "v" } },
 				},
 			},
 		},

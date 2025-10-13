@@ -28,6 +28,15 @@ return {
 				local project_name = vim.fn.fnamemodify(root_dir, ":t")
 				local workspace_dir = vim.fn.expand("~/.local/share/jdtls/workspaces/" .. project_name)
 
+				local home = os.getenv("HOME")
+				local bundles = {
+					vim.fn.glob(
+						home
+							.. "/.local/share/java-debug/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar",
+						1
+					),
+				}
+
 				-- Optional: per-buffer on_attach (keys, codelens, etc.)
 				local function on_attach(_, bufnr)
 					-- helper
@@ -75,7 +84,9 @@ return {
 							},
 						},
 					},
-					init_options = { bundles = {} },
+					init_options = { -- Path to java-debug JAR
+						bundles = bundles,
+					},
 				})
 			end,
 		})

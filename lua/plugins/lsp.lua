@@ -72,7 +72,7 @@ return {
 					map(nmode, "<leader>lt", telescope.lsp_type_definitions, "[T]ype Definition")
 
 					-- Nice diagnostics helpers
-					map(nximode, "<C-K>", vim.lsp.buf.signature_help, "Open float signature help")
+					map(nximode, "<C-m>", vim.lsp.buf.signature_help, "Open float signature help")
 					map(nmode, "<leader>dp", vim.diagnostic.goto_prev, "[P]rev Diagnostic")
 					map(nmode, "<leader>dn", vim.diagnostic.goto_next, "[N]ext Diagnostic")
 					map(nmode, "<leader>df", function()
