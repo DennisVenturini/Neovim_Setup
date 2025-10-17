@@ -60,6 +60,30 @@ return {
 			dapui.toggle()
 		end, { desc = "Toggle DAP UI" })
 
+		-------------------------------------------------------------------------
+		-- ▶ Dynamic DAP keymaps (active only while debugging)
+		-------------------------------------------------------------------------
+		local opts = { noremap = true, silent = true }
+
+		-- When a debug session starts → add temporary keymaps
+		dap.listeners.after.event_initialized["keymaps"] = function()
+			vim.keymap.set("n", "<C-Right>", dap.step_into, opts)
+			vim.keymap.set("n", "<C-Up>", dap.step_out, opts)
+			vim.keymap.set("n", "<C-Down>", dap.step_over, opts)
+			vim.keymap.set("n", "<C-Left>", dap.continue, opts)
+			vim.keymap.set("n", "<C-b>", dap.toggle_breakpoint, opts)
+		end
+
+		-- When the session ends → remove them so arrows behave normally again
+		dap.listeners.before.event_terminated["keymaps"] = function()
+			vim.keymap.del("n", "<C-Up>")
+			vim.keymap.del("n", "<C-Down>")
+			vim.keymap.del("n", "<C-Right>")
+			vim.keymap.del("n", "<C-Left>")
+			vim.keymap.del("n", "<C-b>")
+		end
+		dap.listeners.before.event_exited["keymaps"] = dap.listeners.before.event_terminated["keymaps"]
+
 		-- Optional remote attach (for JVMs started with JDWP)
 		dap.configurations.java = {
 			{
@@ -70,5 +94,40 @@ return {
 				port = 5005,
 			},
 		}
+
+		vim.schedule(function()
+			-- icons
+			vim.fn.sign_define("DapBreakpoint", {
+				text = "⏺",
+				texthl = "DapBreakpoint",
+				linehl = "",
+				numhl = "",
+			})
+			vim.fn.sign_define("DapBreakpointCondition", {
+				text = "◆",
+				texthl = "DapBreakpointCondition",
+				linehl = "",
+				numhl = "",
+			})
+			vim.fn.sign_define("DapLogPoint", {
+				text = "◆",
+				texthl = "DapLogPoint",
+				linehl = "",
+				numhl = "",
+			})
+			vim.fn.sign_define("DapStopped", {
+				text = "▶",
+				texthl = "DapStopped",
+				linehl = "DapStoppedLine",
+				numhl = "",
+			})
+
+			-- highlight colors (TokyoNight style)
+			vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#f7768e" }) -- red
+			vim.api.nvim_set_hl(0, "DapBreakpointCondition", { fg = "#e0af68" }) -- gold
+			vim.api.nvim_set_hl(0, "DapLogPoint", { fg = "#7aa2f7" }) -- blue
+			vim.api.nvim_set_hl(0, "DapStopped", { fg = "#7aa2f7", bold = true })
+			vim.api.nvim_set_hl(0, "DapStoppedLine", { bg = "#3d2f1f" })
+		end)
 	end,
 }
