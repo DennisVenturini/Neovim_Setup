@@ -17,7 +17,7 @@ return {
 				css = { "prettierd", "prettier" },
 
 				lua = { "stylua" },
-				json = { "prettierd", "prettier" },
+				json = { "jq" },
 				yaml = { "yamlfmt" },
 				xml = { "xmlformatter" },
 				sh = { "shfmt" },
@@ -37,11 +37,18 @@ return {
 				shfmt = {
 					append_args = { "-i", "2" },
 				},
+				jq = {
+					command = "jq",
+					args = {
+						".",
+						"--indent",
+						"4",
+					},
+					stdin = true,
+				},
 				prettier = {
 					-- fallback if prettierd is missing
 					prepend_args = {
-						"--parser",
-						"html",
 						"--embedded-language-formatting",
 						"auto",
 						"--tab-width",

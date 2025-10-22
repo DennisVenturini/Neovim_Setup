@@ -10,7 +10,7 @@ del({ "i", "s" }, "<C-s>") -- signature help in insert/select
 
 ----------------------------------------------------------------------------------------------------------------------------------
 vim.api.nvim_create_user_command("ClearRegisters", function()
-	for _, reg in ipairs(vim.split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-"*+~:.%#=', "")) do
+	for _, reg in ipairs(vim.split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-"*+', "")) do
 		vim.fn.setreg(reg, {})
 	end
 	print("✨ All registers cleared!")
@@ -43,8 +43,8 @@ map("n", "<C-q>", "<cmd>q<cr>", "Quit all!")
 ----------------------------------------------------------------------------------------------------------------------------------
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-----------------------------------------------------------------------------------------------------------------------------------
+map("n", "<Esc>", "<cmd>nohlsearch<CR>")
+------------------------------------------------------------------------------------------------------------------------
 
 ----------------------------------------------------------------------------------------------------------------------------------
 -- Disable the Spacebar key's default behavior in normal and visual modes
@@ -70,21 +70,21 @@ map("n", "<M-o>", function()
 	vim.cmd("copen")
 end, "Toggle Quickfix list")
 
-vim.keymap.set("n", "<M-p>", function()
+map("n", "<M-p>", function()
 	local bufnr = vim.api.nvim_get_current_buf()
 	local pos = vim.api.nvim_win_get_cursor(0)
 	vim.fn.setqflist(
 		{ { bufnr = bufnr, lnum = pos[1], col = pos[2] + 1, text = vim.api.nvim_buf_get_name(bufnr) } },
 		"a"
 	)
-end, { desc = "Quickfix: add current buffer @cursor" })
+end, "Quickfix: add current buffer @cursor")
 
 -- Clear the entire quickfix list and close the window
-vim.keymap.set("n", "<M-i>", function()
+map("n", "<M-i>", function()
 	vim.fn.setqflist({}, "r") -- replace with empty list
 	pcall(vim.cmd, "cclose")
 	vim.notify("Quickfix: list cleared")
-end, { desc = "Quickfix: clear list" })
+end, "Quickfix: clear list")
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -99,15 +99,29 @@ map("v", "K", ":m '<-2<CR>gv=gv", "Move visual selection up")
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Empty line BELOW current line
-vim.keymap.set("n", "<M-l>", ":<C-u>put =''<CR>", { desc = "Empty line below (Normal mode)" })
+map("n", "<M-l>", function()
+	local row = vim.api.nvim_win_get_cursor(0)[1]
+	vim.api.nvim_buf_set_lines(0, row, row, false, { "" })
+end, "Empty line below (Normal mode)")
 
 -- Empty line ABOVE current line
-vim.keymap.set("n", "<M-h>", ":<C-u>put! =''<CR>", { desc = "Empty line above (Normal mode)" })
+map("n", "<M-h>", function()
+	local row = vim.api.nvim_win_get_cursor(0)[1]
+	vim.api.nvim_buf_set_lines(0, row - 1, row - 1, false, { "" })
+end, "Empty line above (Normal mode)")
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- delete single character without copying into register
 map("n", "x", '"_x', "delete single character without copying into register")
+
+-- yank into named reg
+map({ "n", "v" }, "»", '"yy', "yank into y register")
+
+-- paste from y reg
+map({ "n", "v", "i" }, "æ", '"yp', "paste from y register")
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -180,16 +194,16 @@ map("v", "p", '"_dP', "Keep last yanked when pasting")
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Diagnostic keymaps
-vim.keymap.set("n", "[d", function()
+map("n", "[d", function()
 	vim.diagnostic.jump({ count = -1, float = true })
-end, { desc = "Go to previous diagnostic message" })
+end, "Go to previous diagnostic message")
 
-vim.keymap.set("n", "]d", function()
+map("n", "]d", function()
 	vim.diagnostic.jump({ count = 1, float = true })
-end, { desc = "Go to next diagnostic message" })
+end, "Go to next diagnostic message")
 
-vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
+map("n", "<leader>d", vim.diagnostic.open_float, "Open floating diagnostic message")
+map("n", "<leader>q", vim.diagnostic.setloclist, "Open diagnostics list")
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
