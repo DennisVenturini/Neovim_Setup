@@ -1,14 +1,15 @@
+---@type luasnip
 local lua_Snip = require("luasnip")
 local helper = require("snippets.helpers")
 -- some shorthands...
-local snippet = lua_Snip.snippet
-local snippet_Node = lua_Snip.snippet_node
-local text_Node = lua_Snip.text_node
-local insert_Node = lua_Snip.insert_node
-local function_Node = lua_Snip.function_node
-local choice_Node = lua_Snip.choice_node
-local dynamic_Node = lua_Snip.dynamic_node
-local restore_Node = lua_Snip.restore_node
+local snippet = require("luasnip").snippet
+local snippet_Node = require("luasnip").snippet_node
+local text_Node = require("luasnip").text_node
+local insert_Node = require("luasnip").insert_node
+local function_Node = require("luasnip").function_node
+local choice_Node = require("luasnip").choice_node
+local dynamic_Node = require("luasnip").dynamic_node
+local restore_Node = require("luasnip").restore_node
 local lambda = require("luasnip.extras").lambda
 local extras = require("luasnip.extras")
 local rep = require("luasnip.extras").rep
@@ -23,7 +24,15 @@ local conds = require("luasnip.extras.conditions")
 local conds_expand = require("luasnip.extras.conditions.expand")
 
 return {
-	snippet("wrap", {
+	snippet("space_with_line", {
+		text_Node({
+			"------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
+			"",
+			"------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
+		}),
+	}),
+
+	snippet("wrap_snippet_node", {
 		text_Node("snippet_Node(nil, {"),
 		text_Node({ "", "\t" }),
 
@@ -38,7 +47,7 @@ return {
 		text_Node({ "", "})" }),
 	}),
 
-	snippet("sni", {
+	snippet("snippet", {
 		text_Node('snippet("'),
 		insert_Node(1, "name"),
 
@@ -54,7 +63,7 @@ return {
 		}),
 	}),
 
-	snippet("snode", {
+	snippet("snippet_node", {
 		text_Node("snippet_Node("),
 
 		choice_Node(1, {
@@ -78,7 +87,7 @@ return {
 	}),
 
 	-- snip function
-	snippet("fn", {
+	snippet("function", {
 		insert_Node(1, "name"),
 		text_Node({ " = function()", "\t" }),
 		insert_Node(2),
@@ -89,7 +98,7 @@ return {
 	}),
 
 	-- snip return plugins
-	snippet("ret", {
+	snippet("return", {
 		text_Node({ "return {", "\t" }),
 
 		insert_Node(1),

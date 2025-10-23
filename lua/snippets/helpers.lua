@@ -69,6 +69,24 @@ helper.recursive_insert_with_comma = function()
 	})
 end
 
+helper.recursive_insert_key_value = function()
+	return snippet_Node(nil, {
+		choice_Node(1, {
+			snippet_Node(nil, {
+				insert_Node(1, ""),
+			}),
+
+			snippet_Node(nil, {
+				text_Node(", "),
+				insert_Node(1, "key"),
+				text_Node(" = "),
+				insert_Node(2, "value"),
+				dynamic_Node(3, helper.recursive_insert_key_value, {}),
+			}),
+		}),
+	})
+end
+
 helper.if_conditionals = function()
 	return snippet_Node(nil, {
 		choice_Node(1, {

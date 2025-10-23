@@ -1,14 +1,14 @@
 local lua_Snip = require("luasnip")
 local helper = require("snippets.helpers")
 -- some shorthands...
-local snippet = lua_Snip.snippet
-local snippet_Node = lua_Snip.snippet_node
-local text_Node = lua_Snip.text_node
-local insert_Node = lua_Snip.insert_node
-local function_Node = lua_Snip.function_node
-local choice_Node = lua_Snip.choice_node
-local dynamic_Node = lua_Snip.dynamic_node
-local restore_Node = lua_Snip.restore_node
+local snippet = require("luasnip").snippet
+local snippet_Node = require("luasnip").snippet_node
+local text_Node = require("luasnip").text_node
+local insert_Node = require("luasnip").insert_node
+local function_Node = require("luasnip").function_node
+local choice_Node = require("luasnip").choice_node
+local dynamic_Node = require("luasnip").dynamic_node
+local restore_Node = require("luasnip").restore_node
 local lambda = require("luasnip.extras").lambda
 local rep = require("luasnip.extras").rep
 local partial = require("luasnip.extras").partial
@@ -23,6 +23,16 @@ local conds_expand = require("luasnip.extras.conditions.expand")
 
 return {
 
+	snippet("this_constructor", {
+		text_Node("this."),
+		insert_Node(1, "parameter"),
+
+		text_Node(" = "),
+		rep(1),
+		insert_Node(2, ""),
+		text_Node(";"),
+	}),
+
 	snippet("annotation", {
 		text_Node("@"),
 		insert_Node(1, "name"),
@@ -30,7 +40,20 @@ return {
 		choice_Node(2, {
 			snippet_Node(nil, {
 				text_Node("("),
-				insert_Node(1, "single"),
+
+				choice_Node(1, {
+					snippet_Node(nil, {
+						insert_Node(1, "key"),
+						text_Node(" = "),
+						insert_Node(2, "value"),
+
+						dynamic_Node(3, helper.recursive_insert_key_value, {}),
+					}),
+
+					snippet_Node(nil, {
+						insert_Node(1, "argument"),
+					}),
+				}),
 
 				text_Node(")"),
 			}),
@@ -41,7 +64,7 @@ return {
 		}),
 	}),
 
-	snippet("var", {
+	snippet("variable", {
 		choice_Node(1, {
 			text_Node(""),
 			text_Node("final "),
@@ -59,7 +82,7 @@ return {
 		text_Node({ ";", "" }),
 	}),
 
-	snippet("switch", {
+	snippet("switch_statement", {
 		text_Node("switch ("),
 		insert_Node(1, "expression"),
 
@@ -74,7 +97,7 @@ return {
 		insert_Node(0, ""),
 	}),
 
-	snippet("if", {
+	snippet("if_statement", {
 		text_Node("if ("),
 
 		dynamic_Node(1, helper.if_conditionals, {}),
@@ -160,45 +183,45 @@ return {
 	}),
 
 	-- Snip Public private protected static final String
-	snippet("pfss", {
+	snippet("public_static_final_string", {
 		choice_Node(1, {
 			text_Node("public "),
 			text_Node("private "),
 			text_Node("protected "),
 		}),
 		choice_Node(2, {
-			text_Node(""),
 			text_Node("static "),
+			text_Node(""),
 		}),
 		choice_Node(3, {
-			text_Node(""),
 			text_Node("final "),
+			text_Node(""),
 		}),
 		choice_Node(4, {
-			text_Node(""),
 			text_Node("String "),
+			text_Node(""),
 		}),
 	}),
 
 	-- Snip Public private protected static final
-	snippet("pfs", {
+	snippet("public_static_final", {
 		choice_Node(1, {
 			text_Node("public "),
 			text_Node("private "),
 			text_Node("protected "),
 		}),
 		choice_Node(2, {
-			text_Node(""),
 			text_Node("static "),
+			text_Node(""),
 		}),
 		choice_Node(3, {
-			text_Node(""),
 			text_Node("final "),
+			text_Node(""),
 		}),
 	}),
 
 	-- Snip ArrayList
-	snippet("lar", {
+	snippet("array_List", {
 		text_Node("ArrayList<"),
 		insert_Node(1, "class"),
 		function_Node(function(_, snip)

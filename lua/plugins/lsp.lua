@@ -15,7 +15,7 @@ return {
 						"cssls",
 						"jsonls",
 						"yamlls",
-						"lua_ls",
+						-- "lua_ls",
 						"lemminx",
 						"bashls",
 						"dockerls",
@@ -250,14 +250,21 @@ return {
 			---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 			---------------------------------------------------------------------------------------------------------------------------------------------------------
-			-- Lua (let conform handle formatting)
 			vim.lsp.config.lua_ls = {
-				capabilities = capabilities,
+				cmd = {
+					vim.fn.expand("~/.local/share/nvim/mason/packages/lua-language-server/bin/lua-language-server"),
+				},
 				settings = {
 					Lua = {
 						runtime = { version = "LuaJIT" },
-						workspace = { checkThirdParty = false, library = vim.api.nvim_get_runtime_file("", true) },
-						diagnostics = { globals = { "vim" }, disable = { "missing-fields" } },
+						workspace = {
+							checkThirdParty = false,
+							library = {
+								vim.fn.expand("~/.config/nvim"),
+								vim.fn.expand("~/.local/share/nvim/lazy/LuaSnip/lua"),
+							},
+						},
+						diagnostics = { globals = { "vim" } },
 						completion = { callSnippet = "Replace" },
 						format = { enable = false },
 					},
