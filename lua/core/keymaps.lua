@@ -99,6 +99,83 @@ end, "Quickfix: clear list")
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- Camel case w e b
+local function wmotion_case_and_snake_sensitive()
+	local current_line_as_string = vim.fn.getline(".")
+	local current_cursor_column = vim.fn.col(".")
+	local string_after_cursor = current_line_as_string:sub(current_cursor_column + 1)
+
+	local position_next_uppercase = string_after_cursor:find("%u") -- uppercase
+	local position_next_snake = string_after_cursor:find("_[%a]") -- _letter
+
+	local target_position
+	if position_next_uppercase and position_next_snake then
+		target_position = math.min(position_next_uppercase, position_next_snake + 1)
+	else
+		target_position = position_next_uppercase or (position_next_snake and position_next_snake + 1)
+	end
+
+	if target_position then
+		vim.cmd("normal! " .. target_position .. "l")
+	end
+end
+map({ "n", "v" }, "ſ", wmotion_case_and_snake_sensitive, "Camel and Snakecase sensitive w motion")
+
+local function bmotion_case_and_snake_sensitive()
+	local current_line_as_string = vim.fn.getline(".")
+	local current_cursor_column = vim.fn.col(".")
+	local string_before_cursor = current_line_as_string:sub(1, current_cursor_column - 1):reverse()
+
+	local position_previous_uppercase = string_before_cursor:find("%u")
+	local position_previous_snake = string_before_cursor:find("_[%a]")
+
+	local target_position
+	if position_previous_uppercase and position_previous_snake then
+		target_position = math.min(position_previous_uppercase, position_previous_snake + 1)
+	else
+		target_position = position_previous_uppercase or (position_previous_snake and position_previous_snake + 1)
+	end
+
+	if target_position then
+		vim.cmd("normal! " .. target_position .. "h")
+	end
+end
+
+map({ "n", "v" }, "“", bmotion_case_and_snake_sensitive, "Camel and Snakecase sensitive b motion")
+
+local function emotion_case_and_snake_sensitive()
+	local current_line_as_string = vim.fn.getline(".")
+	local current_cursor_column = vim.fn.col(".")
+	local string_after_cursor = current_line_as_string:sub(current_cursor_column + 1)
+
+	local position_next_uppercase = string_after_cursor:find("%u")
+	local position_next_snake = string_after_cursor:find("_[%a]")
+
+	if position_next_snake == 1 then
+		string_after_cursor = string_after_cursor:sub(2)
+		position_next_snake = string_after_cursor:find("_[%a]")
+
+		if position_next_snake then
+			position_next_snake = position_next_snake + 1
+		end
+	end
+
+	local target_position
+	if position_next_uppercase and position_next_snake then
+		target_position = math.min(position_next_uppercase - 1, position_next_snake)
+	else
+		target_position = (position_next_snake and position_next_snake - 1)
+			or (position_next_uppercase and position_next_uppercase - 1)
+	end
+
+	if target_position then
+		vim.cmd("normal! " .. target_position .. "l")
+	end
+end
+map({ "n", "v" }, "€", emotion_case_and_snake_sensitive, "Camel and Snakecase sensitive e motion")
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Spacebar leader key and fd as esc
 vim.g.mapleader = " "
 map({ "i", "v", "n", "s", "x", "o", "c" }, "fd", "<Esc>", "")
@@ -148,11 +225,14 @@ map("v", "K", ":m '<-2<CR>gv=gv", "Move visual selection up")
 -- delete single character without copying into register
 map("n", "x", '"_x', "delete single character without copying into register")
 
+-- Keep last yanked when pasting
+map("v", "p", '"_dP', "Keep last yanked when pasting")
+
 -- yank into named reg
 map({ "n", "v" }, "»", '"yy', "yank into y register")
 
 -- paste from y reg
-map({ "n", "v", "i" }, "ſ", '"yp', "paste from y register")
+map({ "n", "v", "i" }, "«", '"yp', "paste from y register")
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -216,9 +296,4 @@ map("n", "<leader>tw", "<cmd>set wrap!<CR>", "Toggle line wrapping")
 -- Stay in indent mode
 map("v", "<", "<gv", "Stay in indent mode")
 map("v", ">", ">gv", "Stay in indent mode")
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- Keep last yanked when pasting
-map("v", "p", '"_dP', "Keep last yanked when pasting")
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
