@@ -112,16 +112,12 @@ local function move_case_snake(dir)
 
 		if dir == "end" then
 			if next_snakecase == 1 then
-				print(line_string_after_cursor)
 				line_string_after_cursor = line_string_after_cursor:sub(2)
-				print(line_string_after_cursor)
-				print(next_snakecase)
 				next_snakecase = line_string_after_cursor:find("_[%a]")
 
 				if next_snakecase then
 					next_snakecase = next_snakecase + 1
 				end
-				print(next_snakecase)
 			end
 
 			if next_uppercase and next_snakecase then
