@@ -99,81 +99,85 @@ end, "Quickfix: clear list")
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- Camel case w e b
-local function wmotion_case_and_snake_sensitive()
-	local current_line_as_string = vim.fn.getline(".")
-	local current_cursor_column = vim.fn.col(".")
-	local string_after_cursor = current_line_as_string:sub(current_cursor_column + 1)
+-- custom w, e and b motion for snake and camelcase
+local function move_case_snake(dir)
+	local current_line = vim.fn.getline(".")
+	local column_number_of_cursor = vim.fn.col(".")
+	local target = nil
 
-	local position_next_uppercase = string_after_cursor:find("%u") -- uppercase
-	local position_next_snake = string_after_cursor:find("_[%a]") -- _letter
+	if dir == "forward" or dir == "end" then
+		local line_string_after_cursor = current_line:sub(column_number_of_cursor + 1)
+		local next_uppercase = line_string_after_cursor:find("%u")
+		local next_snakecase = line_string_after_cursor:find("_[%a]")
 
-	local target_position
-	if position_next_uppercase and position_next_snake then
-		target_position = math.min(position_next_uppercase, position_next_snake + 1)
-	else
-		target_position = position_next_uppercase or (position_next_snake and position_next_snake + 1)
-	end
+		if dir == "end" then
+			if next_snakecase == 1 then
+				print(line_string_after_cursor)
+				line_string_after_cursor = line_string_after_cursor:sub(2)
+				print(line_string_after_cursor)
+				print(next_snakecase)
+				next_snakecase = line_string_after_cursor:find("_[%a]")
 
-	if target_position then
-		vim.cmd("normal! " .. target_position .. "l")
-	end
-end
-map({ "n", "v" }, "ſ", wmotion_case_and_snake_sensitive, "Camel and Snakecase sensitive w motion")
+				if next_snakecase then
+					next_snakecase = next_snakecase + 1
+				end
+				print(next_snakecase)
+			end
 
-local function bmotion_case_and_snake_sensitive()
-	local current_line_as_string = vim.fn.getline(".")
-	local current_cursor_column = vim.fn.col(".")
-	local string_before_cursor = current_line_as_string:sub(1, current_cursor_column - 1):reverse()
+			if next_uppercase and next_snakecase then
+				target = math.min(next_uppercase, next_snakecase + 1) - 1
+			else
+				target = (next_snakecase and next_snakecase - 1) or (next_uppercase and next_uppercase - 1)
+			end
+		elseif dir == "forward" then
+			if next_uppercase and next_snakecase then
+				target = math.min(next_uppercase, next_snakecase + 1)
+			else
+				target = next_uppercase or (next_snakecase and next_snakecase + 1)
+			end
+		end
+	elseif dir == "backward" then
+		local line_before_cursor = current_line:sub(1, column_number_of_cursor - 1):reverse()
+		local prev_upper = line_before_cursor:find("%u")
+		local prev_snake = line_before_cursor:find("_[%a]")
 
-	local position_previous_uppercase = string_before_cursor:find("%u")
-	local position_previous_snake = string_before_cursor:find("_[%a]")
-
-	local target_position
-	if position_previous_uppercase and position_previous_snake then
-		target_position = math.min(position_previous_uppercase, position_previous_snake + 1)
-	else
-		target_position = position_previous_uppercase or (position_previous_snake and position_previous_snake + 1)
-	end
-
-	if target_position then
-		vim.cmd("normal! " .. target_position .. "h")
-	end
-end
-
-map({ "n", "v" }, "“", bmotion_case_and_snake_sensitive, "Camel and Snakecase sensitive b motion")
-
-local function emotion_case_and_snake_sensitive()
-	local current_line_as_string = vim.fn.getline(".")
-	local current_cursor_column = vim.fn.col(".")
-	local string_after_cursor = current_line_as_string:sub(current_cursor_column + 1)
-
-	local position_next_uppercase = string_after_cursor:find("%u")
-	local position_next_snake = string_after_cursor:find("_[%a]")
-
-	if position_next_snake == 1 then
-		string_after_cursor = string_after_cursor:sub(2)
-		position_next_snake = string_after_cursor:find("_[%a]")
-
-		if position_next_snake then
-			position_next_snake = position_next_snake + 1
+		if prev_upper and prev_snake then
+			target = math.min(prev_upper, prev_snake + 1)
+		else
+			target = prev_upper or (prev_snake and prev_snake + 1)
 		end
 	end
 
-	local target_position
-	if position_next_uppercase and position_next_snake then
-		target_position = math.min(position_next_uppercase - 1, position_next_snake)
-	else
-		target_position = (position_next_snake and position_next_snake - 1)
-			or (position_next_uppercase and position_next_uppercase - 1)
+	if not target then
+		return
 	end
 
-	if target_position then
-		vim.cmd("normal! " .. target_position .. "l")
+	local move = nil
+	if dir == "forward" or dir == "end" then
+		move = target .. "l"
+	elseif dir == "backward" then
+		move = target .. "h"
 	end
+
+	vim.cmd("normal! " .. move)
 end
-map({ "n", "v" }, "€", emotion_case_and_snake_sensitive, "Camel and Snakecase sensitive e motion")
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+local function wmotion_case_and_snake_sensitive()
+	move_case_snake("forward")
+end
+
+local function bmotion_case_and_snake_sensitive()
+	move_case_snake("backward")
+end
+
+local function emotion_case_and_snake_sensitive()
+	move_case_snake("end")
+end
+
+map({ "n", "x", "o" }, "ſ", wmotion_case_and_snake_sensitive, "Camel & Snake forward motion (like w)")
+map({ "n", "x", "o" }, "“", bmotion_case_and_snake_sensitive, "Camel & Snake backward motion (like b)")
+map({ "n", "x", "o" }, "€", emotion_case_and_snake_sensitive, "Camel & Snake end motion (like e)")
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Spacebar leader key and fd as esc
