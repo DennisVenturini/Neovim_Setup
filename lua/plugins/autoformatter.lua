@@ -1,65 +1,108 @@
 return {
-	"nvimtools/none-ls.nvim",
-	dependencies = {
-		"nvimtools/none-ls-extras.nvim",
-		"jayp0521/mason-null-ls.nvim", -- ensure dependencies are installed
-	},
-	config = function()
-		local null_ls = require("null-ls")
-		local formatting = null_ls.builtins.formatting -- to setup formatters
-		local diagnostics = null_ls.builtins.diagnostics -- to setup linters
+	{
+		"stevearc/conform.nvim",
+		event = { "BufWritePre" },
+		cmd = { "ConformInfo" },
+		-- This will provide type hinting with LuaLS
+		---@module "conform"
+		---@type conform.setupOpts
+		opts = {
+			-- Define your formatters
+			formatters_by_ft = {
+				javascript = { "prettierd", "prettier", "biome" },
+				typescript = { "prettierd", "prettier", "biome" },
+				javascriptreact = { "prettierd", "prettier", "biome" },
+				typescriptreact = { "prettierd", "prettier", "biome" },
+				html = { "prettier" },
+				css = { "prettierd", "prettier" },
 
-		-- Formatters & linters for mason to install
-		require("mason-null-ls").setup({
-			ensure_installed = {
-				"prettier", -- ts/js formatter
-				"eslint_d", -- ts/js linter
-				"shfmt", -- Shell formatter
-				"checkmake", -- linter for Makefiles
-				-- 'stylua', -- lua formatter; Already installed via Mason
-				-- 'ruff', -- Python linter and formatter; Already installed via Mason
-				"clang-format", -- C/C++ formatter
-				"cppcheck", -- C/C++ LSP (install via mason-lspconfig usually)
-				"yamlfmt", -- YAML formatter
-				"prettier", -- also covers JSON, TOML, Markdown
+				lua = { "stylua" },
+				json = { "jq" },
+				yaml = { "yamlfmt" },
+				xml = { "xmlformatter" },
+				sh = { "shfmt" },
+
+				python = { "ruff_format", "ruff_organize_imports", "black" },
+				go = { "gofumpt", "goimports" },
+				rust = { "rustfmt" },
+				c = { "clang_format" },
+				cpp = { "clang_format" },
+				java = { "astyle" },
+				-- ["*"] = { "lsp_format" },
 			},
-			automatic_installation = true,
-		})
-
-		local sources = {
-			formatting.clang_format.with({
-				extra_args = {
-					"--style={BasedOnStyle: LLVM, IndentWidth: 4, UseTab: Never}",
+			-- Set up format-on-save
+			format_on_save = { timeout_ms = 500, lsp_fallback = false },
+			-- Customize formatters
+			formatters = {
+				shfmt = {
+					append_args = { "-i", "2" },
 				},
-			}),
-			diagnostics.cppcheck,
-			diagnostics.checkmake,
-			formatting.yamlfmt,
-			formatting.prettier.with({ filetypes = { "html", "json", "yaml", "markdown", "toml" } }),
-			formatting.stylua,
-			formatting.shfmt.with({ args = { "-i", "4" } }),
-			formatting.terraform_fmt,
-			require("none-ls.formatting.ruff").with({ extra_args = { "--extend-select", "I" } }),
-			require("none-ls.formatting.ruff_format"),
-		}
+				jq = {
+					command = "jq",
+					args = {
+						".",
+						"--indent",
+						"4",
+					},
+					stdin = true,
+				},
+				prettier = {
+					-- fallback if prettierd is missing
+					prepend_args = {
+						"--embedded-language-formatting",
+						"auto",
+						"--tab-width",
+						"4",
+						"--use-tabs",
+						"false",
+						"--print-width",
+						"160",
+						"--single-quote",
+						"true",
+					},
+				},
+				prettierd = {
+					prepend_args = {
+						"--print-width",
+						"160",
+						"--tab-width",
+						"4",
+						"--use-tabs",
+						"false",
+						"--single-quote",
+						"true",
+						"--embedded-language-formatting",
+						"auto",
+					},
+				},
+				stylua = {
+					command = "stylua",
+					args = { "--search-parent-directories", "--stdin-filepath", "$FILENAME", "-" },
+					stdin = true,
+				},
+				astyle = {
+					command = "astyle",
+					args = { "--options=" .. vim.fn.expand("~/.config/nvim/java_style/astylerc") },
+					stdin = true,
+				},
+				xmlformatter = {
+					command = vim.fn.expand("~/.local/share/nvim/mason/bin/xmlformat"),
+					args = { "--indent", "4", "-" }, -- note the trailing '-' for stdin
+					stdin = true,
+				},
+			},
+		},
+		init = function()
+			-- If you want the formatexpr, here is the place to set it
+			vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+		end,
 
-		local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-		null_ls.setup({
-			-- debug = true, -- Enable debug mode. Inspect logs with :NullLsLog.
-			sources = sources,
-			-- you can reuse a shared lspconfig on_attach callback here
-			on_attach = function(client, bufnr)
-				if client:supports_method("textDocument/formatting") then
-					vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-					vim.api.nvim_create_autocmd("BufWritePre", {
-						group = augroup,
-						buffer = bufnr,
-						callback = function()
-							vim.lsp.buf.format({ async = false })
-						end,
-					})
-				end
-			end,
-		})
-	end,
+		format_on_save = function(buf)
+			local ft = vim.bo[buf].filetype
+			if ft == "html" or ft == "css" then
+				return { lsp_fallback = false, timeout_ms = 500 }
+			end
+			return { lsp_fallback = true, timeout_ms = 500 }
+		end,
+	},
 }

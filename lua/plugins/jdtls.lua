@@ -28,6 +28,15 @@ return {
 				local project_name = vim.fn.fnamemodify(root_dir, ":t")
 				local workspace_dir = vim.fn.expand("~/.local/share/jdtls/workspaces/" .. project_name)
 
+				local home = os.getenv("HOME")
+				local bundles = {
+					vim.fn.glob(
+						home
+							.. "/.local/share/java-debug/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar",
+						1
+					),
+				}
+
 				-- Optional: per-buffer on_attach (keys, codelens, etc.)
 				local function on_attach(_, bufnr)
 					-- helper
@@ -35,7 +44,7 @@ return {
 						vim.keymap.set("n", lhs, rhs, { buffer = bufnr, desc = desc })
 					end
 
-					-- Java actions
+					-- mykeybinds
 					map("<leader>ji", jdtls.organize_imports, "Java: Organize Imports")
 					map("<leader>jv", jdtls.extract_variable, "Java: Extract Variable")
 					map("<leader>jc", jdtls.extract_constant, "Java: Extract Constant")
@@ -64,6 +73,7 @@ return {
 							signatureHelp = { enabled = true },
 							eclipse = { downloadSources = true },
 							maven = { downloadSources = true },
+							import = { gradle = { downloadSources = true } },
 							references = { includeDecompiledSources = true },
 							format = { enabled = false },
 							configuration = {
@@ -74,7 +84,9 @@ return {
 							},
 						},
 					},
-					init_options = { bundles = {} },
+					init_options = { -- Path to java-debug JAR
+						bundles = bundles,
+					},
 				})
 			end,
 		})

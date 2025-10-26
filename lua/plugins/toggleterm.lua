@@ -17,7 +17,8 @@ return {
 				lazygit:toggle()
 			end
 
-			vim.keymap.set("n", "<leader>gg", _lazygit_toggle, { noremap = true, silent = true })
+			-- mykeymaps
+			vim.keymap.set("n", "<leader>gg", _lazygit_toggle, { noremap = true, silent = true, desc = "Lazy[G]it" })
 		end,
 	},
 }
