@@ -29,13 +29,19 @@ return {
 				local workspace_dir = vim.fn.expand("~/.local/share/jdtls/workspaces/" .. project_name)
 
 				local home = os.getenv("HOME")
+				local mason_path = home .. "/.local/share/nvim/mason/packages"
+
+				-- Collect all required extension JARs
 				local bundles = {
 					vim.fn.glob(
-						home
-							.. "/.local/share/java-debug/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar",
+						mason_path .. "/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
 						1
 					),
 				}
+				vim.list_extend(
+					bundles,
+					vim.split(vim.fn.glob(mason_path .. "/java-test/extension/server/*.jar", 1), "\n")
+				)
 
 				-- Optional: per-buffer on_attach (keys, codelens, etc.)
 				local function on_attach(_, bufnr)

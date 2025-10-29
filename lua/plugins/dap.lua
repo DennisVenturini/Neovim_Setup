@@ -74,13 +74,19 @@ return {
 			vim.keymap.set("n", "<C-b>", dap.toggle_breakpoint, opts)
 		end
 
-		-- When the session ends → remove them so arrows behave normally again
+		local function safe_del(mode, lhs)
+			local ok = pcall(vim.keymap.del, mode, lhs)
+			if not ok then
+				-- optional: print("⚠️ Tried to delete unmapped key: " .. lhs)
+			end
+		end
+
 		dap.listeners.before.event_terminated["keymaps"] = function()
-			vim.keymap.del("n", "<C-Up>")
-			vim.keymap.del("n", "<C-Down>")
-			vim.keymap.del("n", "<C-Right>")
-			vim.keymap.del("n", "<C-Left>")
-			vim.keymap.del("n", "<C-b>")
+			safe_del("n", "<C-Right>")
+			safe_del("n", "<C-Up>")
+			safe_del("n", "<C-Down>")
+			safe_del("n", "<C-Left>")
+			safe_del("n", "<C-b>")
 		end
 		dap.listeners.before.event_exited["keymaps"] = dap.listeners.before.event_terminated["keymaps"]
 
