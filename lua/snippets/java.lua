@@ -23,7 +23,7 @@ local conds_expand = require("luasnip.extras.conditions.expand")
 
 return {
 
-	snippet("this_constructor", {
+	snippet("this_constructor_snippet", {
 		text_Node("this."),
 		insert_Node(1, "parameter"),
 
@@ -33,7 +33,7 @@ return {
 		text_Node(";"),
 	}),
 
-	snippet("annotation", {
+	snippet("annotation_snippet", {
 		text_Node("@"),
 		insert_Node(1, "name"),
 
@@ -64,7 +64,7 @@ return {
 		}),
 	}),
 
-	snippet("variable", {
+	snippet("variable_snippet", {
 		choice_Node(1, {
 			text_Node(""),
 			text_Node("final "),
@@ -82,7 +82,7 @@ return {
 		text_Node({ ";", "" }),
 	}),
 
-	snippet("switch_statement", {
+	snippet("switch_statement_snippet", {
 		text_Node("switch ("),
 		insert_Node(1, "expression"),
 
@@ -97,7 +97,7 @@ return {
 		insert_Node(0, ""),
 	}),
 
-	snippet("if_statement", {
+	snippet("if_statement_snippet", {
 		text_Node("if ("),
 
 		dynamic_Node(1, helper.if_conditionals, {}),
@@ -132,7 +132,7 @@ return {
 		}),
 	}),
 
-	snippet("class", {
+	snippet("class_snippet", {
 		choice_Node(1, {
 			text_Node("public "),
 			text_Node("private "),
@@ -183,7 +183,7 @@ return {
 	}),
 
 	-- Snip Public private protected static final String
-	snippet("public_static_final_string", {
+	snippet("public_static_final_string_snippet", {
 		choice_Node(1, {
 			text_Node("public "),
 			text_Node("private "),
@@ -204,7 +204,7 @@ return {
 	}),
 
 	-- Snip Public private protected static final
-	snippet("public_static_final", {
+	snippet("public_static_final_snippet", {
 		choice_Node(1, {
 			text_Node("public "),
 			text_Node("private "),
@@ -221,7 +221,7 @@ return {
 	}),
 
 	-- Snip ArrayList
-	snippet("array_List", {
+	snippet("array_List_snippet", {
 		text_Node("ArrayList<"),
 		insert_Node(1, "class"),
 		function_Node(function(_, snip)
