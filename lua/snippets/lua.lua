@@ -24,7 +24,7 @@ local conds = require("luasnip.extras.conditions")
 local conds_expand = require("luasnip.extras.conditions.expand")
 
 return {
-	snippet("space_with_line", {
+	snippet("space_with_line_snippet", {
 		text_Node({
 			"------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
 			"",
@@ -32,7 +32,7 @@ return {
 		}),
 	}),
 
-	snippet("wrap_snippet_node", {
+	snippet("wrap_snippet_node_snippet", {
 		text_Node("snippet_Node(nil, {"),
 		text_Node({ "", "\t" }),
 
@@ -47,7 +47,7 @@ return {
 		text_Node({ "", "})" }),
 	}),
 
-	snippet("snippet", {
+	snippet("snippet_snippet", {
 		text_Node('snippet("'),
 		insert_Node(1, "name"),
 
@@ -63,7 +63,7 @@ return {
 		}),
 	}),
 
-	snippet("snippet_node", {
+	snippet("snippet_node_snippet", {
 		text_Node("snippet_Node("),
 
 		choice_Node(1, {
@@ -87,7 +87,7 @@ return {
 	}),
 
 	-- snip function
-	snippet("function", {
+	snippet("function_snippet", {
 		insert_Node(1, "name"),
 		text_Node({ " = function()", "\t" }),
 		insert_Node(2),
@@ -98,7 +98,7 @@ return {
 	}),
 
 	-- snip return plugins
-	snippet("return", {
+	snippet("return_snippet", {
 		text_Node({ "return {", "\t" }),
 
 		insert_Node(1),

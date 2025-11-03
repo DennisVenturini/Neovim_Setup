@@ -259,7 +259,7 @@ map("n", "<Right>", ":vertical resize +2<CR>", "Resize with arrows")
 -- Buffers
 map("n", "<leader><Tab>", ":bnext<CR>", "Buffers: Next Buffer")
 map("n", "<S-Tab>", ":bprevious<CR>", "Buffers: Previous Buffer")
-map("n", "<leader>vx", "<cmd>bp | bd#<CR>", "Buffers: close buffer") -- close buffer
+map("n", "<leader>x", "<cmd>bp | bd#<CR>", "Buffers: close buffer") -- close buffer
 map("n", "<leader>vb", "<cmd> enew <CR>", "Buffers: new buffer") -- new buffer
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
