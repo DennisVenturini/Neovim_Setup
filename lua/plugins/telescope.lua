@@ -120,6 +120,10 @@ return {
 			builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
 				winblend = 10,
 				previewer = false,
+				layout_config = {
+					width = 0.8, -- 80% of screen width (default is ~0.5)
+					height = 0.6, -- optional: increase height too
+				},
 			}))
 		end, { desc = "[S]earch [C]urrent buffer" })
 

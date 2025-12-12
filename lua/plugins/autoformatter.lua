@@ -27,11 +27,13 @@ return {
 				rust = { "rustfmt" },
 				c = { "clang_format" },
 				cpp = { "clang_format" },
-				java = { "astyle" },
+
+				-- java = { "astyle" },
+
 				-- ["*"] = { "lsp_format" },
 			},
 			-- Set up format-on-save
-			format_on_save = { timeout_ms = 500, lsp_fallback = false },
+			format_on_save = { timeout_ms = 500, lsp_fallback = true },
 			-- Customize formatters
 			formatters = {
 				shfmt = {
@@ -77,19 +79,33 @@ return {
 				},
 				stylua = {
 					command = "stylua",
-					args = { "--search-parent-directories", "--stdin-filepath", "$FILENAME", "-" },
-					stdin = true,
-				},
-				astyle = {
-					command = "astyle",
-					args = { "--options=" .. vim.fn.expand("~/.config/nvim/java_style/astylerc") },
+					args = {
+						"--search-parent-directories", -- still respect project configs
+						"--stdin-filepath",
+						"$FILENAME", -- for context (used in diagnostics)
+						"--config-path",
+						"/dev/null", -- ignore on-disk stylua.toml
+						"--column-width",
+						"160", -- enforce max line length
+						"-", -- read from stdin
+					},
 					stdin = true,
 				},
 				xmlformatter = {
 					command = vim.fn.expand("~/.local/share/nvim/mason/bin/xmlformat"),
-					args = { "--indent", "4", "-" }, -- note the trailing '-' for stdin
+					args = { "--indent", "4", "--blanks", "-" }, -- note the trailing '-' for stdin
 					stdin = true,
 				},
+				-- astyle = {
+				-- 	command = "astyle",
+				-- 	args = { "--options=" .. vim.fn.expand("~/.config/nvim/java_style/astylerc") },
+				-- 	stdin = true,
+				-- },
+
+				-- lsp_format = {
+				-- 	-- This configuration is minimal, simply tells conform to use LSP formatting.
+				-- 	-- You don't need a command or args here.
+				-- },
 			},
 		},
 		init = function()

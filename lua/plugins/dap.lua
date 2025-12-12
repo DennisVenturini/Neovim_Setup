@@ -95,8 +95,8 @@ return {
 			{
 				type = "java",
 				request = "attach",
-				name = "Attach to Remote JVM (192.168.56.101)",
-				hostName = "192.168.56.101",
+				name = "Attach to Remote JVM (192.168.56.102)",
+				hostName = "192.168.56.102",
 				port = 5005,
 			},
 		}

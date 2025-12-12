@@ -85,3 +85,5 @@ require("lazy").setup({
 	require("plugins.sniprun"),
 	----------------------------------------------------------------------------------------------------------------------------------
 })
+
+vim.lsp.handlers["workspace/didChangeWorkspaceFolders"] = function(...) end

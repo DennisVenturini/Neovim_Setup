@@ -434,8 +434,8 @@ return {
 						-- ["<cr>"] = "open_drop",
 						-- ["t"] = "open_tab_drop",
 						["w"] = "open_with_window_picker",
-						["C"] = "close_node",
-						--["C"] = "close_all_subnodes",
+						-- ["C"] = "close_node",
+						["C"] = "close_all_subnodes",
 						["z"] = "close_all_nodes",
 						--["Z"] = "expand_all_nodes",
 						["Z"] = "expand_all_subnodes",
@@ -608,7 +608,7 @@ return {
 					follow_current_file = {
 						enabled = true, -- This will find and focus the file in the active buffer every time
 						--               -- the current file is changed while the tree is open.
-						leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+						leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
 					},
 					hijack_netrw_behavior = "open_default", -- netrw disabled, opening a directory opens neo-tree
 					-- in whatever position is specified in window.position
@@ -623,7 +623,7 @@ return {
 					follow_current_file = {
 						enabled = true, -- This will find and focus the file in the active buffer every time
 						--              -- the current file is changed while the tree is open.
-						leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+						leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
 					},
 					group_empty_dirs = true, -- when true, empty directories will be grouped together
 					show_unloaded = false, -- When working with sessions, for example, restored but unfocused buffers

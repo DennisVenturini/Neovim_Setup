@@ -23,6 +23,10 @@ local conds_expand = require("luasnip.extras.conditions.expand")
 
 return {
 
+	snippet("constructor_with_parameter_snippet", {
+		text_Node("asdf"),
+	}),
+
 	snippet("this_constructor_snippet", {
 		text_Node("this."),
 		insert_Node(1, "parameter"),

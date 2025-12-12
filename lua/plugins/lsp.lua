@@ -15,7 +15,7 @@ return {
 						"cssls",
 						"jsonls",
 						"yamlls",
-						-- "lua_ls",
+						"lua_ls",
 						"lemminx",
 						"bashls",
 						"dockerls",
@@ -251,9 +251,6 @@ return {
 
 			---------------------------------------------------------------------------------------------------------------------------------------------------------
 			vim.lsp.config.lua_ls = {
-				cmd = {
-					vim.fn.expand("~/.local/share/nvim/mason/packages/lua-language-server/bin/lua-language-server"),
-				},
 				settings = {
 					Lua = {
 						runtime = { version = "LuaJIT" },

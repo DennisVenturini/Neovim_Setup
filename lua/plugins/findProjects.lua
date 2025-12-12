@@ -7,15 +7,8 @@ return {
 			detection_methods = { "pattern" },
 			patterns = {
 				".git",
-				"pom.xml",
-				"build.gradle",
-				"package.json",
-				"setup.py",
-				"Makefile",
-				".idea",
-				".vscode",
 			},
-			manual_mode = false,
+			manual_mode = true,
 			datapath = vim.fn.stdpath("data"),
 			ignore_lsp = false,
 		})
