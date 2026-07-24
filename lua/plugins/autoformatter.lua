@@ -32,8 +32,6 @@ return {
 
 				-- ["*"] = { "lsp_format" },
 			},
-			-- Set up format-on-save
-			format_on_save = { timeout_ms = 500, lsp_fallback = true },
 			-- Customize formatters
 			formatters = {
 				shfmt = {
@@ -108,17 +106,58 @@ return {
 				-- },
 			},
 		},
+
+		config = function(_, opts)
+			local conform = require("conform")
+			conform.setup(opts)
+
+			-- Helper function to format ONLY git-modified lines/hunks
+			local function format_git_changes()
+				local hunks = require("gitsigns").get_hunks()
+				if not hunks then
+					return
+				end
+
+				local format = require("conform").format
+				for i = #hunks, 1, -1 do
+					local hunk = hunks[i]
+					if hunk.type ~= "delete" then
+						local start_line = hunk.added.start
+						local end_line = start_line + hunk.added.count
+						if hunk.added.count == 0 then
+							end_line = start_line
+						else
+							end_line = end_line - 1
+						end
+						format({
+							lsp_fallback = true,
+							range = {
+								["start"] = { start_line, 0 },
+								["end"] = { end_line, 0 },
+							},
+						})
+					end
+				end
+			end
+
+			-- Keymap 1: `<leader>cf` to Format the ENTIRE file (Normal Mode)
+			vim.keymap.set("n", "<leader>cf", function()
+				conform.format({ async = true, lsp_fallback = true })
+			end, { desc = "Conform: Format whole file" })
+
+			-- Keymap 2: `<leader>cf` to Format ONLY highlighted selection (Visual Mode)
+			vim.keymap.set("v", "<leader>cf", function()
+				conform.format({ async = true, lsp_fallback = true })
+			end, { desc = "Conform: Format selected range" })
+
+			-- Keymap 3: `<leader>cg` to Format ONLY git-modified lines (Normal Mode)
+			-- Requires 'lewis6991/gitsigns.nvim' to be installed in your setup!
+			vim.keymap.set("n", "<leader>cg", format_git_changes, { desc = "Conform: Format git changes only" })
+		end,
+
 		init = function()
 			-- If you want the formatexpr, here is the place to set it
 			vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-		end,
-
-		format_on_save = function(buf)
-			local ft = vim.bo[buf].filetype
-			if ft == "html" or ft == "css" then
-				return { lsp_fallback = false, timeout_ms = 500 }
-			end
-			return { lsp_fallback = true, timeout_ms = 500 }
 		end,
 	},
 }

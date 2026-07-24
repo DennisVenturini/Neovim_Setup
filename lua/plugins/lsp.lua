@@ -51,8 +51,12 @@ return {
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("user-lsp-attach", { clear = true }),
 				callback = function(event)
-					local function map(mode, lhs, rhs, desc)
-						vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = desc })
+					local function map(mode, lhs, rhs, desc, opts)
+						if opts then
+							vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = desc, expr = opts.expr })
+						else
+							vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = desc })
+						end
 					end
 
 					local nmode = "n"
@@ -61,7 +65,10 @@ return {
 					local telescope = require("telescope.builtin")
 
 					-- mykeymaps
-					map(nmode, "<leader>ln", vim.lsp.buf.rename, "Re[n]ame")
+					map(nmode, "<leader>ln", function()
+						return ":IncRename " .. vim.fn.expand("<cword>")
+					end, "Re[n]ame", { expr = true })
+					-- map(nmode, "<leader>ln", vim.lsp.buf.rename, "Re[n]ame")
 					map(nxmode, "<leader>la", vim.lsp.buf.code_action, "Code [A]ction")
 					map(nmode, "<leader>lr", telescope.lsp_references, "[R]eferences")
 					map(nmode, "<leader>li", telescope.lsp_implementations, "[I]mplementation")
@@ -91,9 +98,7 @@ return {
 					local client = vim.lsp.get_client_by_id(event.data.client_id)
 
 					-- Highlight references on CursorHold
-					if
-						client and supports(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf)
-					then
+					if client and supports(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
 						local grp = vim.api.nvim_create_augroup("user-lsp-highlight", { clear = false })
 						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 							buffer = event.buf,
@@ -217,9 +222,7 @@ return {
 				},
 				root_dir = function(fname)
 					local util = require("lspconfig.util")
-					return util.find_git_ancestor(fname)
-						or util.root_pattern("compile_commands.json", "compile_flags.txt")(fname)
-						or util.path.dirname(fname)
+					return util.find_git_ancestor(fname) or util.root_pattern("compile_commands.json", "compile_flags.txt")(fname) or util.path.dirname(fname)
 				end,
 			}
 			vim.lsp.enable("clangd")

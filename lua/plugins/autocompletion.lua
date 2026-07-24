@@ -10,10 +10,26 @@ return {
 		opts = {
 			-- sources like before
 			snippets = { preset = "luasnip" },
+
 			sources = {
 				default = { "lsp", "path", "buffer", "snippets" },
 			},
+
+			cmdline = {
+				sources = function()
+					local type = vim.fn.getcmdtype()
+					if type == "/" or type == "?" then
+						return { "buffer" }
+					end
+					if type == ":" then
+						return { "cmdline" }
+					end
+					return {}
+				end,
+			},
+
 			signature = { enabled = true },
+
 			-- Kind icons similar to your cmp icons (optional; tweak to taste)
 			appearance = {
 				kind_icons = {
@@ -44,8 +60,26 @@ return {
 					TypeParameter = "󰊄",
 				},
 			},
+
+			fuzzy = {
+				implementation = "prefer_rust_with_warning",
+
+				max_typos = function(keyword)
+					return math.floor(#keyword / 10)
+				end,
+				prebuilt_binaries = {
+					-- Whether or not to automatically download a prebuilt binary from github. If this is set to `false`,
+					-- you will need to manually build the fuzzy binary dependencies by running `cargo build --release`
+					-- Disabled by default when `fuzzy.implementation = 'lua'`
+					download = true,
+				},
+			},
+
 			-- Make the popup show: [icon] label  |  [LSP]/[Snippet]/[Buffer]/[Path]
 			completion = {
+				keyword = {
+					range = "full",
+				},
 				menu = {
 					border = "rounded",
 					draw = {
@@ -73,7 +107,8 @@ return {
 						},
 					},
 				},
-				documentation = { window = { border = "single" } },
+				documentation = { auto_show = true, auto_show_delay_ms = 100, window = { border = "single" } },
+				ghost_text = { enabled = true },
 			},
 
 			-- mykeymaps

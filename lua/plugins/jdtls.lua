@@ -2,7 +2,7 @@ return {
 	"mfussenegger/nvim-jdtls",
 	config = function()
 		-- absolute path to your shared code style config
-		local CODE_STYLE_PATH = "/home/dventurini/IdeaProjects/code-style/"
+		local CODE_STYLE_PATH = "/home/dventurini/IdeaProjects/documentation/dev-knowledge-base/JavaCodeStyle/"
 
 		-- Helper: read .importorder from global code-style repo
 		function read_import_order()
@@ -39,8 +39,8 @@ return {
 				local root_dir = require("jdtls.setup").find_root({
 					"mvnw",
 					".git",
-					"gradlew",
 					"pom.xml",
+					"gradlew",
 					"build.gradle",
 				}, dirname) or dirname
 
@@ -49,6 +49,7 @@ return {
 				local workspace_dir = vim.fn.expand("~/.local/share/jdtls/workspaces/" .. project_name)
 
 				local mason_path = vim.fn.stdpath("data") .. "/mason/packages"
+				local lombok_jar = mason_path .. "/jdtls/lombok.jar"
 
 				local test_bundles = vim.split(vim.fn.glob(mason_path .. "/java-test/extension/server/*.jar", true), "\n")
 				local debug_bundle = vim.fn.glob(mason_path .. "/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar", true)
@@ -98,11 +99,17 @@ return {
 						"-Dlog.level=ALL",
 						"-Dlog.protocol=true",
 						"-Xms1g",
+
+						"-javaagent:" .. lombok_jar,
+
 						"--add-modules=ALL-SYSTEM",
+
 						"--add-opens",
 						"java.base/java.util=ALL-UNNAMED",
+
 						"--add-opens",
 						"java.base/java.lang=ALL-UNNAMED",
+
 						"-jar",
 						vim.fn.glob("~/.local/share/nvim/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"),
 						"-configuration",
@@ -114,26 +121,33 @@ return {
 					on_attach = on_attach,
 					settings = {
 						java = {
+							autobuild = { enabled = true },
 							signatureHelp = { enabled = true },
 							eclipse = { downloadSources = true },
 							maven = { downloadSources = true },
-							import = { gradle = { downloadSources = true } },
-							references = { includeDecompiledSources = true },
+							import = { gradle = { downloadSources = true }, maven = { enabled = true } },
+							references = { includeDecompiledSources = false },
 							format = {
 								enabled = true,
 								settings = {
-									url = "file:///home/dventurini/IdeaProjects/code-style/BlacknedJavaCodeStyle.xml",
+									url = "file://" .. CODE_STYLE_PATH .. "BlacknedJavaCodeStyle.xml",
 								},
 							},
 							completion = {
+								enabled = false,
 								importOrder = read_import_order(),
+								fuzzySearch = true,
+								matchCase = "off",
+								guessMethodArguments = true,
+								maxResults = 0,
+								postfix = true,
 							},
 							imports = {
 								separateStaticImports = true,
 								organizeImports = true,
 							},
 							saveActions = {
-								organizeImports = true,
+								organizeImports = false,
 							},
 							configuration = {
 								runtimes = {

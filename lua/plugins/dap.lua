@@ -95,8 +95,36 @@ return {
 			{
 				type = "java",
 				request = "attach",
-				name = "Attach to Remote JVM (192.168.56.102)",
-				hostName = "192.168.56.102",
+				name = "Attach to Remote JVM (Select Host)",
+				hostName = function()
+					local hosts = {
+						"192.168.56.1",
+						"192.168.56.2",
+						"192.168.56.3",
+						"172.26.151.84",
+						"172.26.151.90",
+						"11.11.11.100",
+						"Enter Manually...",
+					}
+
+					return coroutine.create(function(dap_run_co)
+						vim.ui.select(hosts, {
+							prompt = "Select Host IP:",
+							format_item = function(item)
+								return "Host: " .. item
+							end,
+						}, function(choice)
+							if choice == "Enter Manually..." then
+								-- Open a text input if manual is chosen
+								local manual_ip = vim.fn.input("Host IP: ", "")
+								coroutine.resume(dap_run_co, manual_ip)
+							else
+								-- Otherwise use the selected IP (default to localhost if escaped)
+								coroutine.resume(dap_run_co, choice or "127.0.0.1")
+							end
+						end)
+					end)
+				end,
 				port = 5005,
 			},
 		}

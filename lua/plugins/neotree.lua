@@ -13,6 +13,7 @@ return {
 			vim.cmd([[nnoremap \ :Neotree reveal<cr>]])
 			-- mykeymaps
 			vim.keymap.set("n", "<leader>e", ":Neotree toggle position=left<CR>", { noremap = true, silent = true }) -- focus file explorer
+			vim.keymap.set("n", "<leader>i", ":Neotree reveal<CR>", { noremap = true, silent = true }) -- focus file explorer
 			vim.keymap.set("n", "<leader>gns", ":Neotree float git_status<CR>", { noremap = true, silent = true }) -- open git status window
 
 			require("neo-tree").setup({
@@ -31,7 +32,7 @@ return {
 				enable_modified_markers = true, -- Show markers for files with unsaved changes.
 				enable_opened_markers = true, -- Enable tracking of opened files. Required for `components.name.highlight_opened_files`
 				enable_refresh_on_write = true, -- Refresh the tree when a file is written. Only used if `use_libuv_file_watcher` is false.
-				enable_cursor_hijack = false, -- If enabled neotree will keep the cursor on the first letter of the filename when moving in the tree.
+				enable_cursor_hijack = true, -- If enabled neotree will keep the cursor on the first letter of the filename when moving in the tree.
 				git_status_async = true,
 				-- These options are for people with VERY large git repos
 				git_status_async_options = {
@@ -606,7 +607,7 @@ return {
 					group_empty_dirs = false, -- when true, empty folders will be grouped together
 					search_limit = 50, -- max number of search results when using filters
 					follow_current_file = {
-						enabled = true, -- This will find and focus the file in the active buffer every time
+						enabled = false, -- This will find and focus the file in the active buffer every time
 						--               -- the current file is changed while the tree is open.
 						leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
 					},

@@ -82,3 +82,17 @@ vim.opt.iskeyword:append("-") -- Hyphenated words recognized by searches (defaul
 vim.opt.formatoptions:remove({ "c", "r", "o" }) -- Don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode. (default: 'croql')
 
 vim.opt.runtimepath:remove("/usr/share/vim/vimfiles") -- Separate Vim plugins from Neovim in case Vim still in use (default: includes this path if Vim is installed)
+
+vim.api.nvim_set_hl(0, "DiffDelete", { bg = "#3c1f24", fg = "#5a2d33" })
+
+-- Optional: Make your added lines look crisper on the right side too
+vim.api.nvim_set_hl(0, "DiffAdd",    { bg = "#1e3323", fg = "#2e4f36" })
+vim.api.nvim_set_hl(0, "DiffChange", { bg = "#223545", fg = "#334f66" })
+vim.api.nvim_set_hl(0, "DiffText",   { bg = "#2b455c", fg = "#ffff00" })
+
+vim.opt.diffopt = {
+    "internal",
+    "filler",       -- 🌟 This fixes your issue by showing blank space where lines were deleted
+    "closeoff",     -- Closes diff mode if one of the buffers is hidden
+    "linematch:60", -- Better hunk matching for small edits on a line
+}

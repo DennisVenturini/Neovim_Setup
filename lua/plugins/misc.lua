@@ -6,7 +6,12 @@ return {
 		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = { signs = false },
 	},
-
+	{
+		"smjonas/inc-rename.nvim",
+		config = function()
+			require("inc_rename").setup()
+		end,
+	},
 	-- Easily comment visual regions/lines
 	{
 		"numToStr/Comment.nvim",
@@ -15,12 +20,7 @@ return {
 			local opts = { noremap = true, silent = true }
 			-- mykeymaps
 			vim.keymap.set("n", "<C-p>", require("Comment.api").toggle.linewise.current, opts)
-			vim.keymap.set(
-				"v",
-				"<C-p>",
-				"<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<cr>",
-				opts
-			)
+			vim.keymap.set("v", "<C-p>", "<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<cr>", opts)
 		end,
 	},
 
@@ -53,7 +53,10 @@ return {
 			keys = {
 				{ "<leader>gs", "<cmd>Git<CR>", desc = "Git status (Fugitive)" },
 				{ "<leader>gb", "<cmd>Git blame<CR>", desc = "Git blame" },
-				{ "<leader>gd", "<cmd>Gdiffsplit<CR>", desc = "Git diff split" },
+
+				{ "<leader>gD", "<cmd>Gdiffsplit<CR>", desc = "Git diff split (vs current branch)" },
+				{ "<leader>gd", "<cmd>Gvdiffsplit development<CR>", desc = "Git diff horizontal (vs development)" },
+				{ "<leader>gI", "<cmd>Gvdiffsplit development<CR>", desc = "Review vs development (Horizontal Stack)" },
 			},
 		},
 		{
